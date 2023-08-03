@@ -1,0 +1,13 @@
+query FetchAgent {
+  FetchAgent {
+    _id
+    username
+    password
+    profileImage
+    email
+    dob
+    state
+    address
+    token
+  }
+}

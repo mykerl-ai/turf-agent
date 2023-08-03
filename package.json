@@ -8,10 +8,19 @@
     "lint": "vue-cli-service lint"
   },
   "dependencies": {
+    "@apollo/client": "^3.6.9",
     "@fawmi/vue-google-maps": "^0.9.79",
+    "@vue/apollo-option": "^4.0.0-alpha.20",
+    "axios": "^1.4.0",
     "core-js": "^3.8.3",
+    "graphql": "^16.6.0",
+    "graphql-tag": "^2.12.6",
+    "pinia": "^2.0.22",
+    "pinia-plugin-persistedstate": "^2.2.0",
     "vue": "^3.2.13",
-    "vue-router": "^4.0.3"
+    "vue-router": "^4.0.3",
+    "javascript-time-ago": "^2.5.9",
+    "vue-toastification": "^2.0.0-rc.5"
   },
   "devDependencies": {
     "@babel/core": "^7.12.16",

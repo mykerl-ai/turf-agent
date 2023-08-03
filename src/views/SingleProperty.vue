@@ -4,8 +4,15 @@
       <div class="flex gap-8">
         <div class="-mb-80 mt-12">
           <img
+            v-if="!singleHouse.fileUrl.length"
             class="h-11/12 w-96 bg-contain"
             src="@/assets/img/house-3.png"
+            alt=""
+          />
+          <img
+            v-else
+            class="h-11/12 w-96 bg-contain"
+            :src="singleHouse.fileUrl[0]"
             alt=""
           />
 
@@ -13,7 +20,7 @@
 
           <div class="flex justify-between items-center">
             <p class="capitalize text-xs text-error font-bold text-left">
-              taken
+              {{ singleHouse.statusType }}
             </p>
 
             <button
@@ -28,9 +35,7 @@
           <h1
             class="text-white text-left text-2xl leading-10 font-medium capitalize"
           >
-            Michael Coke
-            <br />
-            Estate
+            {{ singleHouse.houseType }}
           </h1>
         </div>
       </div>
@@ -68,17 +73,21 @@
         <form class="w-full flex flex-col gap-6" action="">
           <div class="flex flex-col gap-2">
             <label class="text-secondary text-xs" for="">Tenant Name </label>
-            <TurfInput class="text-white" v-model="data.name"></TurfInput>
+            <TurfInput :value="singleHouse.username" class="text-white">{{
+              singleHouse.username
+            }}</TurfInput>
           </div>
 
           <div class="flex flex-col gap-2">
             <label class="text-secondary text-xs" for="">House Address </label>
-            <TurfInput class="text-white" v-model="data.address"></TurfInput>
+            <TurfInput :value="singleHouse.address" class="text-white">{{
+              singleHouse.address
+            }}</TurfInput>
           </div>
 
           <div class="flex flex-col gap-2">
             <label class="text-secondary text-xs" for="">Tenant Number </label>
-            <TurfInput class="text-white" v-model="data.num"></TurfInput>
+            <TurfInput class="text-white"></TurfInput>
           </div>
         </form>
 
@@ -112,12 +121,30 @@
 import TurfButton from "@/components/ButtonNew.vue";
 import TurfInput from "@/components/TextInput.vue";
 
-import { ref } from "vue";
+import { useDataStore } from "@/stores/data.js";
 
-const data = ref({
-  name: "Charly Koman",
-  address: "42/49  Oceanview  Road  Molont Cresent , Ikoyi  Lagos",
-  num: "09055222598",
+import { useRoute } from "vue-router";
+import { computed, onMounted } from "vue";
+
+const store = useDataStore();
+const route = useRoute();
+
+const { query } = store;
+const singleHouse = computed(() =>
+  store.getAgentHouses.find((h) => h._id === route.params.id)
+);
+
+async function queryHouses() {
+  await query({
+    endpoint: "FetchHouses",
+    payload: {},
+    service: "GENERAL",
+    storeKey: "agentHouses",
+  });
+}
+
+onMounted(async () => {
+  await queryHouses();
 });
 </script>
 

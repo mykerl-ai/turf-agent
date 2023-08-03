@@ -6,7 +6,7 @@
           class="text-white text-left text-2xl leading-10 font-medium capitalize"
         >
           Agent <br />
-          Michael Anorue
+          {{ agentProfile.username }}
         </h1>
       </div>
 
@@ -18,21 +18,30 @@
         </div>
         <div class="flex gap-3 -mb-24 justify-end flex-col">
           <p class="text-white text-xs text-center">
-            <span class="text-xl">40</span> <br />
+            <span class="text-xl">{{ listOfHouses.length }}</span> <br />
             Houses under <br />
             your watch
           </p>
 
           <p class="text-secondary text-xs text-center">
-            <span class="text-xl">24</span><br />
+            <span class="text-xl">{{ listOfHouses.length }}</span
+            ><br />
             Houses under <br />
             your watch
           </p>
         </div>
 
         <img
+          v-if="!agentProfile.profileImage.length"
+          class="-mb-32 bg-cover mt-12 w-52 h-72"
+          :src="avatar"
+          alt=""
+        />
+
+        <img
+          v-else
           class="-mb-32 bg-contain mt-12 w-52 h-72"
-          src="@/assets/img/profile.png"
+          :src="agentProfile.profileImage"
           alt=""
         />
       </div>
@@ -59,14 +68,21 @@
 
         <div class="my-4 flex flex-wrap gap-5">
           <div
-            v-for="(d, i) in data"
+            v-for="(d, i) in listOfHouses"
             :key="i"
             @click="
-              $router.push({ name: 'SingleProperty', params: { id: 'test' } })
+              $router.push({ name: 'SingleProperty', params: { id: d._id } })
             "
             class="flex flex-col gap-3"
           >
             <img
+              v-if="d.fileUrl.length"
+              class="bg-contain h-64 w-60"
+              :src="d.fileUrl[0]"
+              alt=""
+            />
+            <img
+              v-else
               class="bg-contain h-64 w-60"
               src="@/assets/img/house-1.png"
               alt=""
@@ -76,7 +92,7 @@
               style="color: #a1a1a1"
               class="text-lightText text-left text-xs leading-5"
             >
-              {{ d.name }}
+              {{ d.houseType }}
             </p>
           </div>
         </div>
@@ -86,31 +102,42 @@
 </template>
 
 <script setup>
-import { ref } from "vue";
 import TurfButton from "@/components/ButtonNew.vue";
+import { useDataStore } from "@/stores/data.js";
+import avatar from "@/assets/img/avatar.png";
 
-const data = ref([
-  {
-    name: " Michael Coke Estate",
-    num: 1,
-  },
-  {
-    name: " Michael Coke Estate",
-    num: 2,
-  },
-  {
-    name: " Michael Coke Estate",
-    num: 1,
-  },
-  {
-    name: " Michael Coke Estate",
-    num: 2,
-  },
-  {
-    name: " Michael Coke Estate",
-    num: 1,
-  },
-]);
+// import { useRouter } from "vue-router";
+import { computed, onMounted } from "vue";
+
+const store = useDataStore();
+// const router = useRouter();
+
+const { query } = store;
+const agentProfile = computed(() => store.getAgentData);
+const listOfHouses = computed(() => store.getAgentHouses);
+console.log(listOfHouses.value);
+
+async function queryHouses() {
+  await query({
+    endpoint: "FetchHouses",
+    payload: {},
+    service: "GENERAL",
+    storeKey: "agentHouses",
+  });
+}
+async function queryAgents() {
+  await query({
+    endpoint: "FetchAgent",
+    payload: {},
+    service: "GENERAL",
+    storeKey: "agentData",
+  });
+}
+
+onMounted(async () => {
+  await queryAgents();
+  await queryHouses();
+});
 </script>
 
 <style></style>

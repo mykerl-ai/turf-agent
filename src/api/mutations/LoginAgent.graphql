@@ -1,0 +1,7 @@
+mutation LoginAgent($input: LoginAgentInput) {
+  LoginAgent(input: $input) {
+    token
+    userId
+    accountType
+  }
+}

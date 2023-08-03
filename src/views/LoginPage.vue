@@ -34,24 +34,44 @@
             >
           </p>
           <!-- step one -->
-          <div v-if="step === 1" class="w-full">
+          <form @submit.prevent="login" v-if="step === 1" class="w-full">
             <div
               class="mt-40 mb-8 ml-8 grid grid-flow-col gap-0 auto-cols-auto w-full"
             >
               <input
                 class="p-2 bg-none focus:outline-none text-xs border-b-2 bg-transparent w-full text-white font-medium border-primary placeholder-text-white::placeholder"
-                type="text"
-                placeholder="Start Your Journey With Us Today "
+                type="email"
+                required
+                v-model="args.email"
+                placeholder="Email"
               />
               <img
-                @click="step = 2"
-                class="border-b-2 border-primary pl-7"
+                class="invisible border-b-2 border-primary pl-7"
                 src="@/assets/icons/register-arrow.svg"
                 alt=""
               />
             </div>
 
-            <div class="grid justify-center">
+            <div
+              class="mb-8 ml-8 grid grid-flow-col gap-0 auto-cols-auto w-full"
+            >
+              <input
+                class="p-2 bg-none focus:outline-none border-b-2 bg-transparent w-full text-white font-medium border-primary placeholder-text-white::placeholder"
+                type="password"
+                required
+                v-model="args.password"
+                placeholder="Password "
+              />
+              <button class="border-none focus:outline-none">
+                <img
+                  class="border-b-2 border-primary pl-7"
+                  src="@/assets/icons/register-arrow.svg"
+                  alt=""
+                />
+              </button>
+            </div>
+
+            <!-- <div class="grid justify-center">
               <svg
                 width="29"
                 height="6"
@@ -62,7 +82,7 @@
                 <rect width="19" height="6" rx="3" fill="white" />
                 <circle cx="26" cy="3" r="3" fill="#D1643A" />
               </svg>
-            </div>
+            </div> -->
             <TurfButton class="font-normal mt-2 text-xs" fill="clear"
               >Forgot Password?</TurfButton
             >
@@ -85,7 +105,7 @@
                 </div>
               </div>
             </div>
-          </div>
+          </form>
           <!-- step one -->
 
           <!-- step two -->
@@ -153,14 +173,58 @@
         </div>
       </div>
     </div>
+
+    <TurfLoader v-if="loading" />
   </main>
 </template>
 
 <script setup>
+import { useToast } from "vue-toastification";
+
+import { useDataStore } from "@/stores/data.js";
+import { useRouter } from "vue-router";
+// import { useToast } from "vue-toastification";
+
+const store = useDataStore();
+const router = useRouter();
+const toast = useToast();
+
+const { mutate } = store;
 import TurfButton from "@/components/ButtonNew.vue";
 import { ref } from "vue";
 
 const step = ref(1);
+const args = ref({
+  email: "",
+  password: "",
+});
+const loading = ref(false);
+
+async function login() {
+  try {
+    loading.value = true;
+
+    let res = await mutate({
+      endpoint: "LoginAgent",
+      data: {
+        input: args.value,
+      },
+      service: "GENERAL",
+    });
+    console.log(res, "login");
+    if (res) {
+      toast.success("Login successful");
+      window.localStorage.setItem("token", res.token);
+      window.localStorage.setItem("userId", res.userId);
+      router.push({ name: "Home" });
+    }
+  } catch (e) {
+    console.log(e);
+    toast.error(e.message);
+  } finally {
+    loading.value = false;
+  }
+}
 </script>
 
 <style scoped>
