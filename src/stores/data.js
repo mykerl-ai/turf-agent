@@ -7,11 +7,15 @@ export const useDataStore = defineStore("main", {
   state: () => ({
     agentHouses: [],
     agentData: {},
+    singleAppointment: {},
+    appointments: [],
   }),
 
   getters: {
     getAgentHouses: (state) => state.agentHouses,
     getAgentData: (state) => state.agentData,
+    getAppointments: (state) => state.appointments,
+    getSingleAppointment: (state) => state.singleAppointment,
   },
 
   actions: {

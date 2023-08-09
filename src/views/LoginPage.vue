@@ -212,10 +212,9 @@ async function login() {
       service: "GENERAL",
     });
     console.log(res, "login");
-    if (res) {
+    if (res && res.token) {
       toast.success("Login successful");
       window.localStorage.setItem("token", res.token);
-      window.localStorage.setItem("userId", res.userId);
       router.push({ name: "Home" });
     }
   } catch (e) {

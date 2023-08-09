@@ -36,6 +36,7 @@
           <!-- step one -->
           <div v-if="step === 1" class="w-full">
             <form
+              @submit.prevent="step = 2"
               class="mt-24 mb-8 ml-8 grid grid-flow-row gap-6 auto-cols-auto w-full"
             >
               <input
@@ -43,6 +44,7 @@
                 type="text"
                 placeholder="Username"
                 v-model="args.username"
+                required
               />
 
               <input
@@ -57,7 +59,6 @@
                 class="bg-none focus:outline-none grid grid-flow-row auto-rows-auto gap-8 mt-4 justify-center"
               >
                 <img
-                  @click="step = 2"
                   class="self-center justify-self-center"
                   src="@/assets/icons/register-arrow.svg"
                   alt=""
@@ -409,10 +410,9 @@ async function registerAgent() {
       // service: "EMP",
     });
     console.log(res, "reso");
-    if (res) {
+    if (res && res.token) {
       toast.success("Sign up successful");
       window.localStorage.setItem("token", res.token);
-      window.localStorage.setItem("userId", res._id);
       router.push({ name: "Home" });
     }
   } catch (e) {

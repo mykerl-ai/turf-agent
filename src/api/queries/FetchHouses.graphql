@@ -3,20 +3,22 @@ query FetchHouses {
     _id
     agentId
     username
-    fileUrl
     address
     position
     homeDetails {
+      _id
+      agentId
       bedRoom
       toilet
       bathRoom
       description
       rules
       requirement
+      fileUrl
+      paymentType
+      statusType
+      price
     }
-    statusType
-    paymentType
-    price
     houseType
   }
 }

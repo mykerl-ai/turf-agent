@@ -1,0 +1,9 @@
+mutation CreateReviewAppointmentRequest(
+  $input: ReviewAppointmentRequestInput!
+) {
+  CreateReviewAppointmentRequest(input: $input) {
+    _id
+    bookAppointment
+    status
+  }
+}

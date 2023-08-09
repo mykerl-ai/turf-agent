@@ -1,0 +1,39 @@
+query FetchAppointmentById($fetchAppointmentByIdId: ID!) {
+  FetchAppointmentById(id: $fetchAppointmentByIdId) {
+    _id
+    house {
+      _id
+      agentId
+      username
+      address
+      position
+      homeDetails {
+        _id
+        agentId
+        bedRoom
+        toilet
+        bathRoom
+        description
+        rules
+        requirement
+        fileUrl
+        paymentType
+        statusType
+        price
+      }
+      houseType
+    }
+    client {
+      _id
+      password
+      username
+      profileImage
+      email
+      dob
+      state
+      address
+    }
+    agentId
+    status
+  }
+}

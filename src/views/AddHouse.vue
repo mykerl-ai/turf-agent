@@ -49,10 +49,10 @@
         <label class="text-secondary text-xs" for="">Address </label>
         <TurfInput v-model="args.address" class="text-white"></TurfInput>
       </div>
-      <div class="flex w-11/12 flex-col gap-2">
+      <!-- <div class="flex w-11/12 flex-col gap-2">
         <label class="text-secondary text-xs" for="">House Type </label>
         <TurfInput v-model="args.houseType" class="text-white"></TurfInput>
-      </div>
+      </div> -->
 
       <div
         v-for="(form, index) in forms"
@@ -70,40 +70,52 @@
 
         <div class="flex flex-col gap-2">
           <label class="text-secondary text-xs" for=""
-            >NUmber of Bedroom
+            >Number of Bedroom
           </label>
-          <TurfInput
+          <TurfInput class="text-white" v-model="form.bedRoom"></TurfInput>
+        </div>
+
+        <div class="flex flex-col gap-2">
+          <label class="text-secondary text-xs" for="">House Type </label>
+          <!-- <TurfInput
             class="text-white"
-            v-model="forms[index].bedRoom"
+            v-model="form.houseType"
+          ></TurfInput> -->
+
+          <TurfSelect
+            :value="args.houseType"
+            :options="houseOptions"
+            @update="args.houseType = $event"
+          ></TurfSelect>
+        </div>
+
+        <div class="flex flex-col gap-2">
+          <label class="text-secondary text-xs" for="">Price </label>
+          <TurfInput
+            type="text"
+            :format="true"
+            class="text-white"
+            v-model="form.price"
           ></TurfInput>
         </div>
 
         <div class="flex flex-col gap-2">
           <label class="text-secondary text-xs" for="">Number of Toilet</label>
-          <TurfInput
-            class="text-white"
-            v-model="forms[index].toilet"
-          ></TurfInput>
+          <TurfInput class="text-white" v-model="form.toilet"></TurfInput>
         </div>
 
         <div class="flex flex-col gap-2">
           <label class="text-secondary text-xs" for=""
             >Number of Bathroom</label
           >
-          <TurfInput
-            class="text-white"
-            v-model="forms[index].bathRoom"
-          ></TurfInput>
+          <TurfInput class="text-white" v-model="form.bathRoom"></TurfInput>
         </div>
 
         <div class="flex col-span-2 flex-col gap-2">
           <label class="text-secondary text-xs" for=""
             >Write a short note
           </label>
-          <TurfText
-            class="text-white"
-            v-model="forms[index].description"
-          ></TurfText>
+          <TurfText class="text-white" v-model="form.description"></TurfText>
         </div>
       </div>
       <button
@@ -127,6 +139,7 @@
 <script setup>
 import TurfInput from "@/components/TextInput.vue";
 import TurfButton from "@/components/ButtonNew.vue";
+import TurfSelect from "@/components/SelectInput2.vue";
 
 import TurfText from "@/components/TextArea.vue";
 import { helperFunctions } from "@/composable/HelperFunctions";
@@ -140,7 +153,7 @@ const store = useDataStore();
 // const router = useRouter();
 const toast = useToast();
 
-const { mutate } = store;
+const { mutate, query } = store;
 const { uploadFileToServer, convertFileToBase64 } = helperFunctions;
 
 const props = defineProps({
@@ -148,10 +161,11 @@ const props = defineProps({
     default: ["jpg", "pdf"],
   },
 });
+const agentProfile = computed(() => store.getAgentData);
 
-let message = ref("");
-let fileName = ref("");
-let fileSize = ref("");
+const message = ref("");
+const fileName = ref("");
+const fileSize = ref("");
 const url = ref([]);
 const loading = ref(false);
 const error = ref(false);
@@ -168,6 +182,10 @@ const forms = ref([
     requirement: "",
     rules: "",
     toilet: "",
+    paymentType: "YEARLY",
+    price: "",
+    statusType: "AVAILABLE",
+    fileUrl: [],
   },
 ]);
 
@@ -179,13 +197,27 @@ const addForm = () => {
     requirement: "",
     rules: "",
     toilet: "",
+    paymentType: "YEARLY",
+    price: "",
+    statusType: "AVAILABLE",
+    fileUrl: [],
   }); // Add an empty form
 };
 
+const houseOptions = ref([
+  { label: "Bungalows", value: "BUNGALOWS" },
+  { label: "Duplex", value: "DUPLEX" },
+  { label: "Terrace Duplex", value: "TERRACE_DUPLEX" },
+  { label: "Semi-detached Duplex", value: "SEMI_DETACHED_DUPLEX" },
+  { label: "Fully-detached Duplex", value: "FULLY_DETACHED_DUPLEX" },
+  { label: "Mansion", value: "MANSION" },
+  { label: "Apartment/Condos", value: "APARTMENT_CONDOS" },
+  { label: "Maisonette", value: "MAISONETTE" },
+  { label: "Pent-house", value: "PENT_HOUSE" },
+]);
+
 const args = ref({
   address: "",
-  agentId: "",
-  fileUrl: [],
   homeDetails: [
     {
       bathRoom: "",
@@ -194,12 +226,13 @@ const args = ref({
       requirement: "",
       rules: "",
       toilet: "",
+      paymentType: "YEARLY",
+      price: "",
+      statusType: "AVAILABLE",
+      fileUrl: [],
     },
   ],
-  paymentType: "YEARLY",
   houseType: "",
-  price: "",
-  statusType: "AVAILABLE",
   username: "",
 });
 
@@ -313,8 +346,29 @@ async function previewFiles(e) {
   }
 }
 
+async function queryAgents() {
+  try {
+    loading.value = true;
+
+    await query({
+      endpoint: "FetchAgent",
+      payload: {},
+      service: "GENERAL",
+      storeKey: "agentData",
+    });
+  } catch (e) {
+    console.log(e);
+  } finally {
+    loading.value = false;
+  }
+}
+
+onMounted(async () => {
+  await queryAgents();
+  args.value.username = agentProfile.value.username;
+});
+
 async function uploadHouse() {
-  args.value.homeDetails = forms.value;
   try {
     loading.value = true;
 
@@ -323,9 +377,10 @@ async function uploadHouse() {
       if (!txt) {
         throw new Error("Image upload failed");
       }
-      args.value.fileUrl = txt;
+      forms.value[forms.value.length - 1].fileUrl = txt;
     }
-
+    args.value.homeDetails = forms.value;
+    console.log(args.value);
     let res = await mutate({
       endpoint: "CreateAgentUploadHouse",
       data: {
@@ -344,10 +399,6 @@ async function uploadHouse() {
     loading.value = false;
   }
 }
-
-onMounted(() => {
-  args.value.agentId = window.localStorage.getItem("userId");
-});
 </script>
 
 <style>

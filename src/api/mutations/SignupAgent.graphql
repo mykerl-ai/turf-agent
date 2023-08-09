@@ -1,13 +1,7 @@
 mutation SignupAgent($input: SignupAgentInput) {
   SignupAgent(input: $input) {
-    _id
-    username
-    password
-    profileImage
-    email
-    dob
-    state
-    address
     token
+    userId
+    accountType
   }
 }

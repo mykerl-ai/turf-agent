@@ -6,7 +6,7 @@
       </span> -->
       <div
         @click.self="isSelect = !isSelect"
-        class="bg-white font-medium text-sm leading-2 focus:outline-none border block appearance-none focus:border-boxBorder"
+        class="inputbg font-medium text-sm leading-2 focus:outline-none border block appearance-none focus:border-boxBorder"
         :class="[
           `${value ? '  text-dark-700' : '  text-dark-500'} ${
             isSelect ? 'border-boxBorder' : 'border-dark-200 py-3 px-4'
@@ -20,12 +20,12 @@
           :class="shrink ? 'invisible' : undefined"
           class="relative w-full z-10 top-0"
         >
-          <easiTextInput
+          <TurfInput
             v-model="searchQuery"
             @keyup="searchFunction"
             autofocus
             :forSelect="true"
-          ></easiTextInput>
+          ></TurfInput>
         </form>
         <span class="relative w-11/12" @click.self="isSelect = true" v-else>
           {{ value == "" ? placeholder : getLabelFromValue(value) }}</span
@@ -33,7 +33,7 @@
 
         <ul
           v-if="isSelect && !grid"
-          class="z-20 w-full absolute right-0 shadow-md bg-white shadow-2xl"
+          class="z-20 w-full absolute bg-white right-0 shadow-md shadow-2xl"
           :class="[
             autoHeight || optionData.length <= 5
               ? 'h-auto  overflow-y-hidden'
@@ -43,7 +43,7 @@
         >
           <li
             v-for="option in optionData"
-            :key="option"
+            :key="option.value"
             class="cursor-pointer text-sm option-color"
             :class="[
               value == option.value ? ' bg-boxBorder text-white' : '',
@@ -141,9 +141,11 @@
 </template>
 
 <script>
-import { ref, reactive, nextTick, watch, computed } from "vue";
+import { ref, watch, computed } from "vue";
+import TurfInput from "@/components/TextInput.vue";
 
 export default {
+  components: { TurfInput },
   emit: ["update", "addNew"],
   props: {
     addOptText: {
@@ -202,6 +204,7 @@ export default {
   },
 
   setup(props, { emit }) {
+    console.log(props.options, "options");
     // const emit = defineEmits(["update"]);
     const optionString = ref("");
     // const searchInput = ref(null);
@@ -226,7 +229,6 @@ export default {
     watch(
       isSelect,
       (val) => {
-        console.log(val);
         if (val === true) {
           optionData.value = props.options;
         } else {
@@ -301,16 +303,16 @@ export default {
   mounted() {
     window.addEventListener("scroll", this.checkDropdownPosition);
   },
-  beforeDestroy() {
+  beforeUnmount() {
     window.removeEventListener("scroll", this.checkDropdownPosition);
   },
 
   methods: {
     checkDropdownPosition() {
       let dropdown = this.$el;
-      let windowHeight = window.innerHeight;
+      // let windowHeight = window.innerHeight;
       let dropdownRect = dropdown.getBoundingClientRect();
-      let dropdownHeight = dropdownRect.height;
+      // let dropdownHeight = dropdownRect.height;
       let dropdownTop = dropdownRect.top;
       let dropdownBottom = dropdownRect.bottom;
 
@@ -335,5 +337,8 @@ export default {
 .option-color {
   color: #000000;
   opacity: 0.8;
+}
+.inputbg {
+  background: rgba(29, 53, 72, 0.1);
 }
 </style>

@@ -1,7 +1,7 @@
 <template>
   <main class="w-full">
     <div class="flex justify-around w-full bg-secondary pb-10 text-xs">
-      <div class="flex flex-col gap-5 items-start self-center">
+      <div class="flex flex-col -ml-32 gap-5 items-start self-center">
         <h1
           class="text-white text-left text-2xl leading-10 font-medium capitalize"
         >
@@ -18,13 +18,18 @@
         </div>
         <div class="flex gap-3 -mb-24 justify-end flex-col">
           <p class="text-white text-xs text-center">
-            <span class="text-xl">{{ listOfHouses.length }}</span> <br />
+            <span class="text-xl">{{
+              (listOfHouses && listOfHouses.length) || 0
+            }}</span>
+            <br />
             Houses under <br />
             your watch
           </p>
 
           <p class="text-secondary text-xs text-center">
-            <span class="text-xl">{{ listOfHouses.length }}</span
+            <span class="text-xl">{{
+              (listOfHouses && listOfHouses.length) || 0
+            }}</span
             ><br />
             Houses under <br />
             your watch
@@ -32,7 +37,11 @@
         </div>
 
         <img
-          v-if="!agentProfile.profileImage.length"
+          v-if="
+            !agentProfile ||
+            !agentProfile.profileImage ||
+            !agentProfile.profileImage.length
+          "
           class="-mb-32 bg-cover mt-12 w-52 h-72"
           :src="avatar"
           alt=""
@@ -64,21 +73,20 @@
       </div>
 
       <div class="mt-9 text-sm">
-        <h3 class="text-secondary text-left">Houses under you</h3>
-
-        <div class="my-4 flex flex-wrap gap-5">
+        <h3 class="text-secondary text-left mb-4">Houses under you</h3>
+        <div class="flex flex-wrap gap-5">
           <div
-            v-for="(d, i) in listOfHouses"
-            :key="i"
+            v-for="hd in houseUnits"
+            :key="hd._id"
             @click="
-              $router.push({ name: 'SingleProperty', params: { id: d._id } })
+              $router.push({ name: 'SingleProperty', params: { id: hd._id } })
             "
             class="flex flex-col gap-3"
           >
             <img
-              v-if="d.fileUrl.length"
+              v-if="hd.fileUrl.length"
               class="bg-contain h-64 w-60"
-              :src="d.fileUrl[0]"
+              :src="hd.fileUrl[0]"
               alt=""
             />
             <img
@@ -92,7 +100,7 @@
               style="color: #a1a1a1"
               class="text-lightText text-left text-xs leading-5"
             >
-              {{ d.houseType }}
+              {{ formatAmount(hd.price) }}
             </p>
           </div>
         </div>
@@ -105,17 +113,21 @@
 import TurfButton from "@/components/ButtonNew.vue";
 import { useDataStore } from "@/stores/data.js";
 import avatar from "@/assets/img/avatar.png";
+import { helperFunctions } from "@/composable/HelperFunctions";
 
 // import { useRouter } from "vue-router";
 import { computed, onMounted } from "vue";
 
 const store = useDataStore();
 // const router = useRouter();
+const { formatAmount } = helperFunctions;
 
 const { query } = store;
 const agentProfile = computed(() => store.getAgentData);
 const listOfHouses = computed(() => store.getAgentHouses);
-console.log(listOfHouses.value);
+const houseUnits = computed(() =>
+  listOfHouses.value.map((det) => det.homeDetails).flat()
+);
 
 async function queryHouses() {
   await query({

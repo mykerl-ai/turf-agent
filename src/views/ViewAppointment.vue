@@ -1,18 +1,18 @@
 <template>
-  <main class="w-full">
+  <main v-if="appointment && appointment.client" class="w-full">
     <div class="flex justify-between w-full bg-secondary px-16 pb-4 text-xs">
       <div class="flex gap-8">
         <div class="-mb-80 mt-12">
           <img
-            v-if="!homeWithDetails.homeDetails[0].fileUrl.length"
-            class="h-11/12 w-96 bg-contain"
+            v-if="!appointment.client.profileImage.length"
+            class="h-7/12 w-72 bg-contain"
             src="@/assets/img/house-3.png"
             alt=""
           />
           <img
             v-else
-            class="h-11/12 w-96 bg-contain"
-            :src="homeWithDetails.homeDetails[0].fileUrl[0]"
+            class="h-7/12 w-72 bg-contain"
+            :src="appointment.client.profileImage"
             alt=""
           />
 
@@ -20,20 +20,42 @@
 
           <div class="flex justify-between items-center">
             <p
-              :class="
-                homeWithDetails.homeDetails[0].statusType === 'AVAILABLE'
-                  ? 'text-success'
-                  : 'text-error'
-              "
+              :class="`text-${status[appointment.status]}`"
               class="capitalize text-xs font-bold text-left"
             >
-              {{ homeWithDetails.homeDetails[0].statusType }}
+              {{ appointment.status }}
             </p>
 
-            <button
+            <!-- <button
+              @click="showOptions = !showOptions"
               class="focus:outline-none border border-primary px-4 py-2 text-primary capitalize"
             >
               edit
+            </button> -->
+
+            <button
+              class="focus:outline-none border border-primary px-4 py-2 text-primary capitalize"
+              style="z-index: 1"
+            >
+              <div
+                class="flex flex-col z-50 text-left items-start text-primary text-sm cursor-pointer"
+              >
+                <span
+                  v-if="appointment.status === 'APPROVED'"
+                  @click="updateStatus('REJECTED')"
+                  class="text-xs"
+                  >Reject</span
+                >
+                <span
+                  v-if="
+                    appointment.status === 'PENDING' ||
+                    appointment.status === 'REJECTED'
+                  "
+                  @click="updateStatus('APPROVED')"
+                  class="text-xs"
+                  >{{ "Approve" }}</span
+                >
+              </div>
             </button>
           </div>
 
@@ -43,7 +65,7 @@
             </p>
 
             <p class="capitalize text-xs text-secondary font-bold text-left">
-              {{ formatAmount(homeWithDetails.homeDetails[0].price) }}
+              {{ formatAmount(appointment.house.homeDetails[0].price) }}
             </p>
           </div>
         </div>
@@ -52,12 +74,12 @@
           <h1
             class="text-white text-left text-2xl leading-10 font-medium capitalize"
           >
-            {{ homeWithDetails.houseType }}
+            {{ appointment.house.houseType }}
           </h1>
         </div>
       </div>
 
-      <div class="flex flex-col justify-between pt-20">
+      <!-- <div class="flex flex-col justify-between pt-20">
         <div class="flex flex-col items-center gap-3">
           <img
             class="w-8 self-center"
@@ -75,7 +97,7 @@
             </span></TurfButton
           >
         </div>
-      </div>
+      </div> -->
     </div>
     <div class="grid grid-cols-2 mb-12 pr-44">
       <p class="invisible">
@@ -89,26 +111,31 @@
       >
         <form class="w-full flex flex-col gap-6" action="">
           <div class="flex flex-col gap-2">
-            <label class="text-secondary text-xs" for="">Tenant Name </label>
-            <TurfInput :value="homeWithDetails.username" class="text-white">{{
-              homeWithDetails.username
-            }}</TurfInput>
+            <label class="text-secondary text-xs" for="">Client Name </label>
+            <TurfInput
+              :value="appointment.client.username"
+              class="text-white"
+              >{{ appointment.client.username }}</TurfInput
+            >
           </div>
 
           <div class="flex flex-col gap-2">
             <label class="text-secondary text-xs" for="">House Address </label>
-            <TurfInput :value="homeWithDetails.address" class="text-white">{{
-              homeWithDetails.address
+            <TurfInput :value="appointment.client.address" class="text-white">{{
+              appointment.client.address
             }}</TurfInput>
           </div>
 
           <div class="flex flex-col gap-2">
-            <label class="text-secondary text-xs" for="">Tenant Number </label>
-            <TurfInput class="text-white"></TurfInput>
+            <label class="text-secondary text-xs" for="">Age</label>
+            <TurfInput
+              :value="calculateAge(appointment.client.dob)"
+              class="text-white"
+            ></TurfInput>
           </div>
         </form>
 
-        <div class="flex flex-col gap-4 gap-2">
+        <!-- <div class="flex flex-col gap-4 gap-2">
           <div class="flex justify-between w-full items-center">
             <label class="text-secondary text-xs" for=""
               >Payment History
@@ -128,62 +155,87 @@
             <span>House Payment for April</span>
             <span class="text-success">2,000,000</span>
           </div>
-        </div>
+        </div> -->
       </div>
     </div>
+    <TurfLoader v-if="loading" />
   </main>
 </template>
 
 <script setup>
-import TurfButton from "@/components/ButtonNew.vue";
+// import TurfButton from "@/components/ButtonNew.vue";
 import TurfInput from "@/components/TextInput.vue";
 import { helperFunctions } from "@/composable/HelperFunctions";
+import { useToast } from "vue-toastification";
 
 import { useDataStore } from "@/stores/data.js";
 
 import { useRoute } from "vue-router";
-import { computed, onMounted } from "vue";
+import { computed, onMounted, ref } from "vue";
 
 const store = useDataStore();
 const route = useRoute();
+const toast = useToast();
+
 const { formatAmount } = helperFunctions;
 
-const { query } = store;
-const listOfHouses = computed(() => store.getAgentHouses);
+const { query, mutate } = store;
 
-function fetchHomeDetails(targetHomeDetailId) {
-  const filteredData = listOfHouses.value
-    .map((item) => {
-      const filteredHomeDetails = item.homeDetails.filter(
-        (homeDetail) => homeDetail._id === targetHomeDetailId
-      );
-
-      if (filteredHomeDetails.length > 0) {
-        return {
-          ...item,
-          homeDetails: filteredHomeDetails,
-        };
-      }
-
-      return null;
-    })
-    .filter(Boolean);
-  return filteredData[0];
-}
-const homeWithDetails = computed(() => fetchHomeDetails(route.params.id));
-console.log(homeWithDetails.value);
-
-async function queryHouses() {
+const appointment = computed(() => store.getSingleAppointment);
+const loading = ref(false);
+const status = ref({
+  PENDING: "primary",
+  APPROVED: "success",
+  REJECTED: "error",
+});
+async function queryAppointment() {
   await query({
-    endpoint: "FetchHouses",
-    payload: {},
+    endpoint: "FetchAppointmentById",
+    payload: { fetchAppointmentByIdId: route.params.id },
     service: "GENERAL",
-    storeKey: "agentHouses",
+    storeKey: "singleAppointment",
   });
 }
+async function updateStatus(status) {
+  try {
+    loading.value = true;
 
+    let res = await mutate({
+      endpoint: "CreateReviewAppointmentRequest",
+      data: {
+        input: { status, bookAppointmentId: route.params.id },
+      },
+      service: "GENERAL",
+    });
+    if (res && res._id) {
+      await queryAppointment();
+      toast.success("Status updated");
+    }
+  } catch (e) {
+    console.log(e);
+  } finally {
+    loading.value = false;
+  }
+}
+
+function calculateAge(dob) {
+  const dobDate = new Date(dob);
+  const currentDate = new Date();
+
+  let yearsDiff = currentDate.getFullYear() - dobDate.getFullYear();
+  const monthsDiff = currentDate.getMonth() - dobDate.getMonth();
+
+  if (
+    monthsDiff < 0 ||
+    (monthsDiff === 0 && currentDate.getDate() < dobDate.getDate())
+  ) {
+    yearsDiff--; // Adjust age if birthday hasn't occurred yet this year
+  }
+
+  return yearsDiff;
+}
 onMounted(async () => {
-  await queryHouses();
+  await queryAppointment();
 });
 </script>
 
