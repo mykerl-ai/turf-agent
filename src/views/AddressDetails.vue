@@ -10,7 +10,7 @@
           <input
             name="address"
             class="border-none bg-secondary focus:bg-secondary text-white focus:ring-0 focus:outline-none text-left text-2xl leading-10 font-medium capitalize"
-            :value="houseUnits.address"
+            v-model="args.address"
             :readonly="!edit.address ? true : false"
           />
           <img
@@ -32,7 +32,7 @@
         <div class="flex items-center my-8 gap-4">
           <select
             class="border-none bg-secondary focus:bg-secondary text-white focus:ring-0 focus:outline-none text-left text-sm w-auto font-medium capitalize"
-            :value="houseUnits.houseType"
+            v-model="args.houseType"
             name="address"
             id=""
             :disabled="!edit.type ? true : false"
@@ -67,6 +67,7 @@
         </div>
         <button
           v-show="edit.address || edit.type"
+          @click="updateHouse"
           class="focus:outline-none rounded-lg border border-white text-xs px-2 py-2 text-white capitalize"
           style="z-index: 1"
         >
@@ -150,7 +151,9 @@
             <img
               v-if="hd.fileUrl.length"
               class="bg-contain h-64 w-60"
-              :src="hd.fileUrl[0]"
+              :src="
+                hd.fileUrl[0].includes('https') ? hd.fileUrl[0] : hd.fileUrl[1]
+              "
               alt=""
             />
             <img
@@ -170,6 +173,7 @@
         </div>
       </div>
     </div>
+    <TurfLoader v-if="loading" />
   </main>
 </template>
 
@@ -178,38 +182,81 @@ import TurfButton from "@/components/ButtonNew.vue";
 import { useDataStore } from "@/stores/data.js";
 import avatar from "@/assets/img/avatar.png";
 import { helperFunctions } from "@/composable/HelperFunctions";
+import { useToast } from "vue-toastification";
 
 import { useRoute } from "vue-router";
 import { computed, onMounted, ref } from "vue";
 
 const store = useDataStore();
+const toast = useToast();
+
 const route = useRoute();
 const { formatAmount } = helperFunctions;
 
-const { query } = store;
+const { query, mutate } = store;
 const agentProfile = computed(() => store.getAgentData);
 const listOfHouses = computed(() => store.getAgentHouses);
 const houseUnits = computed(() =>
   listOfHouses.value.find((det) => det._id === route.params.id)
 );
-
+const args = ref({
+  username: null,
+  houseType: null,
+  homeDetails: null,
+  address: null,
+});
 async function queryHouses() {
-  await query({
-    endpoint: "FetchHouses",
-    payload: {},
-    service: "GENERAL",
-    storeKey: "agentHouses",
-  });
+  try {
+    loading.value = true;
+    await query({
+      endpoint: "FetchHouses",
+      payload: {},
+      service: "GENERAL",
+      storeKey: "agentHouses",
+    });
+  } catch (e) {
+    console.log(e);
+  } finally {
+    loading.value = false;
+  }
 }
 async function queryAgents() {
-  await query({
-    endpoint: "FetchAgent",
-    payload: {},
-    service: "GENERAL",
-    storeKey: "agentData",
-  });
+  try {
+    await query({
+      endpoint: "FetchAgent",
+      payload: {},
+      service: "GENERAL",
+      storeKey: "agentData",
+    });
+  } catch (e) {
+    console.log(e);
+  }
 }
 const edit = ref({ address: false, type: false });
+const loading = ref(false);
+
+async function updateHouse() {
+  try {
+    loading.value = true;
+
+    let res = await mutate({
+      endpoint: "UpdateHouse",
+      data: {
+        updateHouseId: route.params.id,
+        input: args.value,
+      },
+      service: "GENERAL",
+    });
+    if (res && res._id) {
+      await queryHouses();
+      toast.success("House updated");
+    }
+  } catch (e) {
+    console.log(e);
+  } finally {
+    loading.value = false;
+  }
+}
 
 const houseOptions = ref([
   { label: "Bungalows", value: "BUNGALOWS" },
@@ -226,6 +273,23 @@ const houseOptions = ref([
 onMounted(async () => {
   await queryAgents();
   await queryHouses();
+  args.value.address = houseUnits.value?.address;
+  args.value.username = houseUnits.value?.username;
+  args.value.houseType = houseUnits.value?.houseType;
+  args.value.homeDetails = houseUnits.value?.homeDetails.map((h) => {
+    return {
+      bathRoom: h.bathRoom,
+      bedRoom: h.bedRoom,
+      description: h.description,
+      fileUrl: h.fileUrl,
+      paymentType: h.paymentType,
+      price: h.price,
+      requirement: h.requirement,
+      rules: h.rules,
+      statusType: h.statusType,
+      toilet: h.toilet,
+    };
+  });
 });
 </script>
 

@@ -11,6 +11,7 @@ import { createApolloProvider } from "@vue/apollo-option";
 import Toast from "vue-toastification";
 
 import TurfLoader from "@/components/TurfLoader.vue";
+import TurfModal from "@/components/TurfModal.vue";
 
 import "@/index.css";
 import "vue-toastification/dist/index.css";
@@ -24,6 +25,7 @@ app.config.productionTip = false;
 const pinia = createPinia();
 pinia.use(piniaPluginPersistedstate);
 app.component("TurfLoader", TurfLoader);
+app.component("TurfModal", TurfModal);
 app
   .use(router)
   .use(pinia)

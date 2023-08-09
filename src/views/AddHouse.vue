@@ -4,16 +4,20 @@
       @click="$refs.input.click()"
       class="flex flex-col w-full justify-start gap-3 ml-8 self-center"
     >
-      <div v-if="url && url.length" class="w-10/12 h-80 p-4">
-        <img class="w-full h-full" :src="url[0]" alt="" />
-      </div>
+      <!-- <div v-if="url && url.length" class="w-10/12 h-80 p-4">
+        <img
+          style="object-fit: contain"
+          class="w-full h-full"
+          :src="url[0]"
+          alt=""
+        />
+      </div> -->
 
       <div class="gap-3 flex justify-start items-center flex-wrap flex-row">
         <img
           v-for="(u, i) in url"
           :key="i"
           class="cursor-pointer w-32 contain"
-          :class="!url.length || i == 0 ? 'hidden' : 'block'"
           :src="u"
           alt=""
         />
@@ -47,7 +51,11 @@
 
       <div class="flex w-11/12 flex-col gap-2">
         <label class="text-secondary text-xs" for="">Address </label>
-        <TurfInput v-model="args.address" class="text-white"></TurfInput>
+        <TurfInput
+          :readonly="$route.params.id === 'new' ? false : true"
+          v-model="args.address"
+          class="text-white"
+        ></TurfInput>
       </div>
       <!-- <div class="flex w-11/12 flex-col gap-2">
         <label class="text-secondary text-xs" for="">House Type </label>
@@ -75,7 +83,7 @@
           <TurfInput class="text-white" v-model="form.bedRoom"></TurfInput>
         </div>
 
-        <div class="flex flex-col gap-2">
+        <div v-if="$route.params.id === 'new'" class="flex flex-col gap-2">
           <label class="text-secondary text-xs" for="">House Type </label>
           <!-- <TurfInput
             class="text-white"
@@ -119,6 +127,7 @@
         </div>
       </div>
       <button
+        v-show="$route.params.id === 'new'"
         type="button"
         class="rounded-2xl w-32 p-2 col-span-2 bg-secondary text-white"
         @click="addForm"
@@ -146,11 +155,11 @@ import { helperFunctions } from "@/composable/HelperFunctions";
 import { useToast } from "vue-toastification";
 
 import { useDataStore } from "@/stores/data.js";
-// import { useRouter } from "vue-router";
+import { useRoute } from "vue-router";
 import { ref, computed, defineProps, onMounted } from "vue";
 
 const store = useDataStore();
-// const router = useRouter();
+const route = useRoute();
 const toast = useToast();
 
 const { mutate, query } = store;
@@ -161,7 +170,50 @@ const props = defineProps({
     default: ["jpg", "pdf"],
   },
 });
+const listOfHouses = computed(() => store.getAgentHouses);
+const homeWithDetails = computed(() => store.getSingleHomeDetail);
+
+const args = ref({
+  address: "",
+  homeDetails: [
+    {
+      bathRoom: "",
+      bedRoom: "",
+      description: "",
+      requirement: "",
+      rules: "",
+      toilet: "",
+      paymentType: "YEARLY",
+      price: "",
+      statusType: "AVAILABLE",
+      fileUrl: [],
+    },
+  ],
+  houseType: "",
+  username: "",
+});
+
 const agentProfile = computed(() => store.getAgentData);
+function fetchHomeDetails(targetHomeDetailId) {
+  const filteredData = listOfHouses.value
+    .map((item) => {
+      const filteredHomeDetails = item.homeDetails.filter(
+        (homeDetail) => homeDetail._id === targetHomeDetailId
+      );
+
+      if (filteredHomeDetails.length > 0) {
+        return {
+          ...item,
+          // homeDetails: filteredHomeDetails,
+        };
+      }
+
+      return null;
+    })
+    .filter(Boolean);
+  return filteredData[0];
+}
+const houseDetails = computed(() => fetchHomeDetails(route.params.id));
 
 const message = ref("");
 const fileName = ref("");
@@ -215,26 +267,6 @@ const houseOptions = ref([
   { label: "Maisonette", value: "MAISONETTE" },
   { label: "Pent-house", value: "PENT_HOUSE" },
 ]);
-
-const args = ref({
-  address: "",
-  homeDetails: [
-    {
-      bathRoom: "",
-      bedRoom: "",
-      description: "",
-      requirement: "",
-      rules: "",
-      toilet: "",
-      paymentType: "YEARLY",
-      price: "",
-      statusType: "AVAILABLE",
-      fileUrl: [],
-    },
-  ],
-  houseType: "",
-  username: "",
-});
 
 const allowedTypes = computed(() => {
   let allowedTypes = [];
@@ -369,6 +401,7 @@ onMounted(async () => {
 });
 
 async function uploadHouse() {
+  let payload;
   try {
     loading.value = true;
 
@@ -380,17 +413,38 @@ async function uploadHouse() {
       forms.value[forms.value.length - 1].fileUrl = txt;
     }
     args.value.homeDetails = forms.value;
-    console.log(args.value);
+    if (route.params.id !== "new") {
+      payload = {
+        fileUrl: args.value.homeDetails[0].fileUrl,
+        statusType: args.value.homeDetails[0].statusType,
+        bedRoom: args.value.homeDetails[0].bedRoom,
+        toilet: args.value.homeDetails[0].toilet,
+        bathRoom: args.value.homeDetails[0].bathRoom,
+        description: args.value.homeDetails[0].description,
+        rules: args.value.homeDetails[0].rules,
+        requirement: args.value.homeDetails[0].requirement,
+        paymentType: args.value.homeDetails[0].paymentType,
+        price: Number(args.value.homeDetails[0].price),
+      };
+    }
+
     let res = await mutate({
-      endpoint: "CreateAgentUploadHouse",
-      data: {
-        input: args.value,
-      },
+      endpoint:
+        route.params.id === "new"
+          ? "CreateAgentUploadHouse"
+          : "UpdateAgentUploadHouse",
+      data:
+        route.params.id === "new"
+          ? {
+              input: args.value,
+            }
+          : { updateAgentUploadHouseId: route.params.id, input: payload },
       // service: "EMP",
     });
-    console.log(res, "reso");
-    if (res.username) {
-      toast.success("Upload successful");
+    if (res._id) {
+      toast.success(
+        route.params.id === "new" ? "Upload successful" : "Updated successfully"
+      );
     }
   } catch (e) {
     console.log(e);
@@ -399,6 +453,39 @@ async function uploadHouse() {
     loading.value = false;
   }
 }
+async function queryHomeDetails() {
+  try {
+    loading.value = true;
+    await query({
+      endpoint: "FetchHomeDetailsById",
+      payload: { fetchHomeDetailsByIdId: route.params.id },
+      service: "GENERAL",
+      storeKey: "singleHomeDetail",
+    });
+  } catch (e) {
+    console.log(e);
+  } finally {
+    loading.value = false;
+  }
+}
+
+onMounted(async () => {
+  if (route.params.id !== "new") {
+    await queryHomeDetails();
+
+    args.value.address = houseDetails.value.address;
+
+    forms.value[0].bedRoom = homeWithDetails.value.bedRoom;
+    forms.value[0].bathRoom = homeWithDetails.value.bathRoom;
+    forms.value[0].toilet = homeWithDetails.value.toilet;
+    forms.value[0].price = homeWithDetails.value.price;
+    forms.value[0].description = homeWithDetails.value.description;
+    forms.value[0].paymentType = homeWithDetails.value.paymentType;
+    forms.value[0].statusType = homeWithDetails.value.statusType;
+    forms.value[0].requirement = homeWithDetails.value.requirement;
+    forms.value[0].rules = homeWithDetails.value.rules;
+  }
+});
 </script>
 
 <style>

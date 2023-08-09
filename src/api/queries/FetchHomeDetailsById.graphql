@@ -1,0 +1,16 @@
+query FetchHomeDetailsById($fetchHomeDetailsByIdId: ID!) {
+  FetchHomeDetailsById(id: $fetchHomeDetailsByIdId) {
+    _id
+    agentId
+    bedRoom
+    toilet
+    bathRoom
+    description
+    rules
+    requirement
+    fileUrl
+    paymentType
+    statusType
+    price
+  }
+}

@@ -9,6 +9,7 @@ export const useDataStore = defineStore("main", {
     agentData: {},
     singleAppointment: {},
     appointments: [],
+    singleHomeDetail: {},
   }),
 
   getters: {
@@ -16,6 +17,7 @@ export const useDataStore = defineStore("main", {
     getAgentData: (state) => state.agentData,
     getAppointments: (state) => state.appointments,
     getSingleAppointment: (state) => state.singleAppointment,
+    getSingleHomeDetail: (state) => state.singleHomeDetail,
   },
 
   actions: {

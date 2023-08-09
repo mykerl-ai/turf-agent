@@ -1,0 +1,19 @@
+mutation UpdateAgentUploadHouse(
+  $updateAgentUploadHouseId: ID!
+  $input: HomeDetailInput!
+) {
+  UpdateAgentUploadHouse(id: $updateAgentUploadHouseId, input: $input) {
+    _id
+    agentId
+    bedRoom
+    toilet
+    bathRoom
+    description
+    rules
+    requirement
+    fileUrl
+    paymentType
+    statusType
+    price
+  }
+}

@@ -86,7 +86,9 @@
             <img
               v-if="hd.fileUrl.length"
               class="bg-contain h-64 w-60"
-              :src="hd.fileUrl[0]"
+              :src="
+                hd.fileUrl[0].includes('https') ? hd.fileUrl[0] : hd.fileUrl[1]
+              "
               alt=""
             />
             <img

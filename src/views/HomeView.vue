@@ -20,7 +20,7 @@
     </div>
     <div class="flex flex-row-reverse -mt-7">
       <TurfButton
-        @click="$router.push({ name: 'AddHouse' })"
+        @click="$router.push({ name: 'AddHouse', params: { id: 'new' } })"
         size="large"
         class="mr-32"
         color="primary"
@@ -33,7 +33,7 @@
         :class="
           toggle ? 'border-b-2 border-primary text-primary' : 'text-secondary'
         "
-        class="text-sm cursor-pointer pb-2"
+        class="text-xs cursor-pointer pb-2"
       >
         House Information
       </h3>
@@ -42,7 +42,7 @@
         :class="
           !toggle ? 'border-b-2 border-primary text-primary' : 'text-secondary'
         "
-        class="text-sm cursor-pointer pb-2"
+        class="text-xs cursor-pointer pb-2"
       >
         Pending Appointments
       </h3>
