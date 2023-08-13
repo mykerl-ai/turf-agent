@@ -53,7 +53,7 @@
         class="relative grid grid-cols-4 rounded-xl text-secondary w-full justify-between py-3 px-8"
       >
         <div
-          class="grid grid-cols-4 col-span-4 mb-5 rounded-xl border border-greyBorder text-secondary w-full justify-between py-5 text-xs px-8"
+          class="grid grid-cols-4 col-span-4 mb-5 rounded-xl border border-greyBorder text-secondary w-full justify-between py-5 text-xs px-8 shadow-md"
         >
           <p class="w-full capitalize text-xs text-left">address</p>
           <p class="capitalize text-xs text-left justify-self-end">units</p>
@@ -66,14 +66,14 @@
         <div
           v-for="house in listOfHouses"
           :key="house._id"
-          class="cursor-pointer relative bg-backgrd grid grid-cols-4 w-full rounded-xl my-2 col-span-4 py-2 px-4"
+          class="cursor-pointer relative bg-backgrd grid grid-cols-4 w-full rounded-xl my-3 col-span-4 py-2 px-4 shadow-lg"
           @click="
             $router.push({ name: 'AddressDetails', params: { id: house._id } })
           "
         >
           <div class="flex items-center gap-3 w-full">
             <div class="w-10 h-10 bg-secondary rounded-full"></div>
-            <p class="text-xs text-secondary capitalize">
+            <p class="leading-6 text-xs text-secondary capitalize text-left">
               {{ house.address }}
             </p>
           </div>
@@ -109,7 +109,7 @@
         class="relative grid grid-cols-4 rounded-xl text-secondary w-full justify-between py-3 px-8"
       >
         <div
-          class="grid grid-cols-5 col-span-5 mb-5 rounded-xl border border-greyBorder text-secondary w-full justify-between py-5 text-xs px-8"
+          class="grid grid-cols-5 col-span-5 mb-5 rounded-xl border border-greyBorder text-secondary w-full justify-between py-5 text-xs px-8 shadow-md"
         >
           <p class="w-full capitalize text-xs text-left">name</p>
           <p class="capitalize text-xs text-left justify-self-center">
@@ -127,7 +127,7 @@
         <div
           v-for="app in listOfAppointments"
           :key="app._id"
-          class="cursor-pointer relative bg-backgrd grid grid-cols-5 w-full rounded-xl my-2 col-span-5 py-2 px-4"
+          class="cursor-pointer relative bg-backgrd grid grid-cols-5 w-full rounded-xl my-3 col-span-5 py-2 px-4 shadow-lg"
         >
           <div
             @click="
@@ -153,7 +153,7 @@
             "
             class="flex justify-self-end text-xs items-center"
           >
-            <p class="capitalize text-xs font-medium text-left">
+            <p class="leading-6 capitalize text-xs font-medium text-left">
               {{ app.address }}
             </p>
           </div>
