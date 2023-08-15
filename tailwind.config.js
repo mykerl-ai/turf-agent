@@ -35,10 +35,10 @@ module.exports = {
       greyBorder: "#D9D9D9",
       backgrd: "#F5F5F5",
       gradient: "rgb(134, 133, 133)",
-      lightText: "A1A1A1",
+      lightText: "#A1A1A1",
       inputcolor: "#ECF0F3",
       grey: {
-        default: "A1A1A1",
+        default: "#A1A1A1",
         light: "#909090",
         dark: "#868585",
         gradient: "rgba(134, 133, 133, 0.2)",

@@ -2,7 +2,7 @@
   <main v-if="appointment && appointment.client" class="w-full">
     <div class="flex justify-between w-full bg-secondary px-16 pb-4 text-xs">
       <div class="flex gap-8">
-        <div class="-mb-80 mt-12">
+        <div class="-mb-44 mt-12">
           <img
             v-if="!appointment.client.profileImage.length"
             class="h-7/12 w-72 bg-contain"
@@ -70,11 +70,11 @@
           </div>
         </div>
 
-        <div class="flex flex-col gap-5 items-start self-center">
+        <div class="title-Font flex flex-col gap-5 items-start self-center">
           <h1
             class="text-white text-left text-2xl leading-10 font-medium capitalize"
           >
-            {{ appointment.house.houseType }}
+            {{ propertyTypes[appointment.house.houseType] }}
           </h1>
         </div>
       </div>
@@ -187,6 +187,17 @@ const status = ref({
   PENDING: "primary",
   APPROVED: "success",
   REJECTED: "error",
+});
+const propertyTypes = ref({
+  BUNGALOWS: "Bungalows",
+  DUPLEX: "Duplex",
+  TERRACE_DUPLEX: "Terrace Duplex",
+  SEMI_DETACHED_DUPLEX: "Semi-detached Duplex",
+  FULLY_DETACHED_DUPLEX: "Fully-detached Duplex",
+  MANSION: "Mansion",
+  APARTMENT_CONDOS: "Apartment/Condos",
+  MAISONETTE: "Maisonette",
+  PENT_HOUSE: "Pent-house",
 });
 async function queryAppointment() {
   await query({

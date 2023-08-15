@@ -3,7 +3,7 @@
     <div class="flex justify-around w-full bg-secondary pb-10 text-xs">
       <div class="flex flex-col -ml-32 gap-5 items-start self-center">
         <h1
-          class="text-white text-left text-2xl leading-10 font-medium capitalize"
+          class="title-Font text-white text-left text-2xl leading-10 font-medium capitalize"
         >
           Agent <br />
           {{ agentProfile.username }}
@@ -16,7 +16,7 @@
             ><span class="text-xs capitalize">view status</span></TurfButton
           >
         </div>
-        <div class="flex gap-3 -mb-24 justify-end flex-col">
+        <div class="title-Font flex gap-3 -mb-24 justify-end flex-col">
           <p class="text-white text-xs text-center">
             <span class="text-xl">{{
               (listOfHouses && listOfHouses.length) || 0

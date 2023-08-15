@@ -1,7 +1,9 @@
 <template>
   <main class="w-full">
     <div class="flex justify-around w-full bg-secondary pb-10 text-xs">
-      <div class="flex flex-col gap-2 items-start self-center mt-7 -ml-20">
+      <div
+        class="title-Font flex flex-col gap-2 items-start self-center mt-7 -ml-20"
+      >
         <label class="text-white text-lg font-medium" for="address"
           >Address</label
         >
@@ -81,13 +83,13 @@
             ><span class="text-xs capitalize">view status</span></TurfButton
           >
         </div>
-        <div class="flex gap-3 -mb-24 justify-end flex-col">
+        <div class="title-Font flex gap-3 -mb-24 justify-end flex-col">
           <p class="text-white text-xs text-center">
             <span class="text-xl">{{
               (houseUnits && houseUnits.homeDetails.length) || 0
             }}</span>
             <br />
-            Units under <br />
+            Units<br />
             with this address
           </p>
 
@@ -138,7 +140,9 @@
       </div> -->
 
       <div class="mt-9 text-sm">
-        <h3 class="text-secondary text-left mb-4">Houses under address</h3>
+        <h3 class="title-Font text-secondary text-left mb-4">
+          Houses under address
+        </h3>
         <div class="flex flex-wrap gap-5">
           <div
             v-for="hd in houseUnits.homeDetails"
@@ -146,7 +150,7 @@
             @click="
               $router.push({ name: 'SingleProperty', params: { id: hd._id } })
             "
-            class="flex flex-col gap-3"
+            class="flex flex-col gap-4"
           >
             <img
               v-if="hd.fileUrl.length"
@@ -162,13 +166,18 @@
               src="@/assets/img/house-1.png"
               alt=""
             />
+            <div class="flex flex-col gap-1">
+              <span class="font-medium text-left text-sm">
+                {{ formatAmount(hd.price) }}
+              </span>
 
-            <p
-              style="color: #a1a1a1"
-              class="text-lightText text-left text-xs leading-5"
-            >
-              {{ formatAmount(hd.price) }}
-            </p>
+              <span
+                style="color: #a1a1a1"
+                class="font-medium capitalize text-left text-xs leading-5"
+              >
+                {{ hd.description }}
+              </span>
+            </div>
           </div>
         </div>
       </div>

@@ -3,7 +3,7 @@
     <div class="flex justify-between w-full bg-secondary pl-10 text-xs">
       <div class="flex flex-col gap-5 items-start self-center">
         <h1
-          class="text-white text-left text-2xl leading-10 font-medium capitalize"
+          class="title-Font text-white text-left text-3xl leading-10 font-medium capitalize"
         >
           monitor <br />
           your houses
@@ -12,7 +12,7 @@
           @click="$router.push({ name: 'ProfileView' })"
           size="small"
           color="primary"
-          ><span class="text-xs capitalize"> view profile</span></TurfButton
+          ><span class="text-sm capitalize"> view profile</span></TurfButton
         >
       </div>
 
@@ -31,18 +31,22 @@
       <h3
         @click="toggle = !toggle"
         :class="
-          toggle ? 'border-b-2 border-primary text-primary' : 'text-secondary'
+          toggle
+            ? 'border-b-2 border-primary text-primary font-medium'
+            : 'text-lightText font-light'
         "
-        class="text-xs cursor-pointer pb-2"
+        class="text-sm cursor-pointer pb-2"
       >
         House Information
       </h3>
       <h3
         @click="toggle = !toggle"
         :class="
-          !toggle ? 'border-b-2 border-primary text-primary' : 'text-secondary'
+          !toggle
+            ? 'border-b-2 border-primary text-primary font-medium'
+            : 'text-lightText font-light'
         "
-        class="text-xs cursor-pointer pb-2"
+        class="text-sm cursor-pointer pb-2"
       >
         Pending Appointments
       </h3>
@@ -55,12 +59,16 @@
         <div
           class="grid grid-cols-4 col-span-4 mb-5 rounded-xl border border-greyBorder text-secondary w-full justify-between py-5 text-xs px-8 shadow-md"
         >
-          <p class="w-full capitalize text-xs text-left">address</p>
-          <p class="capitalize text-xs text-left justify-self-end">units</p>
-          <p class="capitalize text-xs text-left justify-self-end">
+          <p class="w-full capitalize text-sm font-medium text-left">address</p>
+          <p class="capitalize text-sm font-medium text-left justify-self-end">
+            units
+          </p>
+          <p class="capitalize text-sm font-medium text-left justify-self-end">
             available units
           </p>
-          <p class="capitalize text-xs text-left justify-self-end">options</p>
+          <p class="capitalize text-sm font-medium text-left justify-self-end">
+            options
+          </p>
         </div>
 
         <div
@@ -95,7 +103,7 @@
           </div>
 
           <div class="flex justify-self-end mr-8 items-center">
-            <p class="capitalize text-xs text-left">edit</p>
+            <p class="uppercase font-bold text-xs text-left">edit</p>
           </div>
           <div
             class="absolute right-0 top-0 h-full rounded-r-xl w-4 bg-error"
@@ -111,17 +119,25 @@
         <div
           class="grid grid-cols-5 col-span-5 mb-5 rounded-xl border border-greyBorder text-secondary w-full justify-between py-5 text-xs px-8 shadow-md"
         >
-          <p class="w-full capitalize text-xs text-left">name</p>
-          <p class="capitalize text-xs text-left justify-self-center">
+          <p class="w-full capitalize text-sm font-medium text-left">name</p>
+          <p
+            class="capitalize text-sm font-medium text-left justify-self-center"
+          >
             house address
           </p>
-          <p class="capitalize text-xs text-left justify-self-center -mr-16">
+          <p
+            class="capitalize text-sm font-medium text-left justify-self-center -mr-16"
+          >
             type
           </p>
-          <p class="capitalize text-xs text-left justify-self-center -mr-24">
+          <p
+            class="capitalize text-sm font-medium text-left justify-self-center -mr-24"
+          >
             price
           </p>
-          <p class="capitalize text-xs text-left justify-self-end">Status</p>
+          <p class="capitalize text-sm font-medium text-left justify-self-end">
+            Status
+          </p>
         </div>
 
         <div
@@ -141,6 +157,7 @@
                 backgroundImage: ' url(' + app.image + ')',
               }"
               class="w-10 bg-contain h-10 bg-secondary rounded-full"
+              style="background-repeat: no-repeat; background-position: center"
             ></div>
             <div v-else class="w-10 h-10 bg-secondary rounded-full"></div>
             <p class="text-xs text-secondary capitalize">
@@ -259,6 +276,18 @@ const { formatAmount } = helperFunctions;
 const { query, mutate } = store;
 const loading = ref(false);
 
+const propertyTypes = ref({
+  BUNGALOWS: "Bungalows",
+  DUPLEX: "Duplex",
+  TERRACE_DUPLEX: "Terrace Duplex",
+  SEMI_DETACHED_DUPLEX: "Semi-detached Duplex",
+  FULLY_DETACHED_DUPLEX: "Fully-detached Duplex",
+  MANSION: "Mansion",
+  APARTMENT_CONDOS: "Apartment/Condos",
+  MAISONETTE: "Maisonette",
+  PENT_HOUSE: "Pent-house",
+});
+
 const listOfHouses = computed(() => store.getAgentHouses);
 const listOfAppointments = computed(() => {
   const data = store.getAppointments.map((app) => {
@@ -267,7 +296,7 @@ const listOfAppointments = computed(() => {
       name: app.client.username,
       image: app.client.profileImage || null,
       address: app.house.address,
-      type: app.house.houseType,
+      type: propertyTypes.value[app.house.houseType],
       price: app.house.homeDetails[0].price,
       status: app.status,
     };

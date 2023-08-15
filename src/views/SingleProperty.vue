@@ -42,7 +42,7 @@
           ></div>
         </div>
 
-        <div class="flex flex-col gap-5 items-start self-center">
+        <div class="title-Font flex flex-col gap-5 items-start self-center">
           <div class="flex items-center gap-5">
             <h1
               class="text-white text-left text-2xl leading-10 font-medium capitalize"
@@ -69,7 +69,7 @@
       </div>
 
       <div class="flex flex-col justify-between pt-20">
-        <div class="flex flex-col items-center gap-3">
+        <div class="title-Font flex flex-col items-center gap-3">
           <img
             class="w-8 self-center"
             src="@/assets/icon/calendar.svg"
@@ -158,7 +158,6 @@
             v-for="img in homeWithDetails.fileUrl"
             :key="img"
             class="relative h-40 w-40 flex items-center text-left bg-cover cursor-pointer bg-center"
-            @click="onPreview(img)"
             :style="{
               backgroundImage: ' url(' + img + ')',
             }"
@@ -174,11 +173,13 @@
               v-if="isHovered(img)"
             >
               <img
+                @click="openModal(img)"
                 src="@/assets/icons/white-delete.svg"
                 class="w-3 cursor-pointer"
                 alt=""
               />
               <img
+                @click="onPreview(img)"
                 src="@/assets/icons/white-eye.svg"
                 class="w-4 cursor-pointer"
                 alt=""
@@ -261,12 +262,18 @@
       </div>
     </TurfModal>
     <TurfLoader v-if="loading" />
+    <DeleteModal
+      @close="openDelete = false"
+      @delete="updateStatus(null, toBeDeleted)"
+      v-if="openDelete"
+    />
   </main>
 </template>
 
 <script setup>
 import TurfButton from "@/components/ButtonNew.vue";
 import TurfInput from "@/components/TextInput.vue";
+import DeleteModal from "@/components/DeleteModal.vue";
 import { helperFunctions } from "@/composable/HelperFunctions";
 import { useToast } from "vue-toastification";
 
@@ -308,6 +315,14 @@ const houseDetails = computed(() => fetchHomeDetails(route.params.id));
 const homeWithDetails = computed(() => store.getSingleHomeDetail);
 const hoveredImg = ref("");
 const showStatus = ref(false);
+const openDelete = ref(false);
+const toBeDeleted = ref("");
+
+function openModal(img) {
+  toBeDeleted.value = img;
+  openDelete.value = true;
+}
+
 const propertyTypes = ref({
   BUNGALOWS: "Bungalows",
   DUPLEX: "Duplex",
@@ -371,8 +386,12 @@ const args = ref({
   statusType: "AVAILABLE",
   fileUrl: [],
 });
-async function updateStatus(status) {
-  args.value.statusType = status;
+async function updateStatus(status, image) {
+  if (status) {
+    args.value.statusType = status;
+  } else if (image) {
+    args.value.fileUrl = args.value.fileUrl.filter((img) => img !== image);
+  }
   try {
     loading.value = true;
 
@@ -391,6 +410,7 @@ async function updateStatus(status) {
     toast.error(e.message);
   } finally {
     loading.value = false;
+    openDelete.value = false;
   }
 }
 onMounted(async () => {
@@ -406,6 +426,7 @@ onMounted(async () => {
   args.value.statusType = homeWithDetails.value.statusType;
   args.value.requirement = homeWithDetails.value.requirement;
   args.value.rules = homeWithDetails.value.rules;
+  args.value.fileUrl = homeWithDetails.value.fileUrl;
 });
 </script>
 
