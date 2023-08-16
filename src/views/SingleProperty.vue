@@ -1,8 +1,10 @@
 <template>
   <main v-if="homeWithDetails && homeWithDetails.fileUrl" class="w-full">
-    <div class="flex justify-between w-full bg-secondary px-16 pb-20 text-xs">
-      <div class="flex gap-8">
-        <div class="-mb-96 mt-12">
+    <div
+      class="flex flex-col md:flex-row md:justify-between w-full bg-secondary md:px-16 pb-5 md:pb-20 text-xs"
+    >
+      <div class="flex ml-4 md:ml-0 flex-col md:flex-row gap-5 md:gap-8">
+        <div class="md:-mb-96 mt-5 md:mt-12">
           <!-- <img
             v-if="!homeWithDetails.fileUrl.length"
             class="h-6/12 w-60 bg-contain"
@@ -22,7 +24,7 @@
           /> -->
           <div
             v-if="homeWithDetails.fileUrl.length"
-            class="relative h-72 w-72 flex items-center justify-center text-left bg-cover cursor-pointer bg-center"
+            class="relative h-72 w-72 flex flex-col md:flex-row md:items-center md:justify-center text-left bg-cover cursor-pointer bg-center"
             @click="onPreview(img)"
             :style="
               homeWithDetails.fileUrl[0].includes('https')
@@ -42,10 +44,10 @@
           ></div>
         </div>
 
-        <div class="title-Font flex flex-col gap-5 items-start self-center">
+        <div class="title-Font flex flex-col gap-5 items-start md:self-center">
           <div class="flex items-center gap-5">
             <h1
-              class="text-white text-left text-2xl leading-10 font-medium capitalize"
+              class="text-white text-left text-sm md:text-2xl md:leading-10 font-medium capitalize"
             >
               {{ propertyTypes[houseDetails.houseType] }}
             </h1>
@@ -68,10 +70,12 @@
         </div>
       </div>
 
-      <div class="flex flex-col justify-between pt-20">
-        <div class="title-Font flex flex-col items-center gap-3">
+      <div
+        class="mt-5 md:mt-0 flex flex-col justify-between ml-4 md:ml-0 md:pt-20"
+      >
+        <div class="title-Font flex md:flex-col flex-row items-center gap-3">
           <img
-            class="w-8 self-center"
+            class="md:w-8 w-6 md:self-center"
             src="@/assets/icon/calendar.svg"
             alt=""
           />
@@ -79,8 +83,14 @@
           <p class="text-sm text-left text-white">59</p>
         </div>
 
-        <div class="flex self-end gap-x-4 -mb-10 mt-5 justify-end">
-          <TurfButton size="large" class="" color="primary"
+        <div class="flex md:self-end gap-x-0 md:-mb-10 mt-5 md:justify-end">
+          <TurfButton size="large" class="hidden md:block" color="primary"
+            ><span class="text-xs capitalize"
+              >Send a Notification
+            </span></TurfButton
+          >
+
+          <TurfButton size="small " class="md:hidden" color="primary"
             ><span class="text-xs capitalize"
               >Send a Notification
             </span></TurfButton
@@ -88,11 +98,15 @@
         </div>
       </div>
     </div>
-    <div class="grid grid-cols-2 justify-around mt-16 mb-12 px-20">
+    <div
+      class="grid grid-cols-1 md:grid-cols-2 justify-around mt-2 md:mt-16 mb-12 px-4 md:px-20"
+    >
       <div class="col-span-1 flex flex-col gap-2">
         <p class="text-secondary text-sm text-left my-4">Current Status</p>
 
-        <div class="relative flex gap-x-32 items-center">
+        <div
+          class="relative flex justify-between md:justify-start md:gap-x-32 items-center"
+        >
           <p
             :class="
               homeWithDetails.statusType === 'AVAILABLE'
@@ -141,7 +155,9 @@
           </div>
         </div>
 
-        <div class="mt-5 flex gap-x-32 items-center">
+        <div
+          class="mt-5 flex gap-x-32 justify-between md:justify-start items-center"
+        >
           <p class="text-secondary capitalize text-xs font-medium text-left">
             Price
           </p>
@@ -189,7 +205,7 @@
         </div>
       </div>
       <div
-        class="col-span-1 mt-2 flex flex-col gap-9 justify-end text-left self-end"
+        class="col-span-1 md:mt-2 mt-5 flex flex-col gap-9 justify-end text-left self-end"
       >
         <form class="w-full flex flex-col gap-6" action="">
           <div class="flex flex-col gap-2">

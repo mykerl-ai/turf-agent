@@ -1,6 +1,8 @@
 <template>
-  <main class="grid w-full cursor-pointer-none h-screen grid-cols-3">
-    <div class="image col-span-2"></div>
+  <main
+    class="grid w-full cursor-pointer-none h-screen grid-cols-1 md:grid-cols-3"
+  >
+    <div class="image hidden md:inline-block col-span-2"></div>
     <div class="backdrop cursor-pointer-none h-screen relative">
       <div
         v-show="step != 1"
@@ -24,7 +26,7 @@
       <div style="z-index: 1" class="z-50">
         <div class="z-50 w-full">
           <p
-            class="w-full text-white text-3xl leading-10 text-left mt-24 ml-12 capitalize"
+            class="w-full text-white text-3xl leading-10 text-left mt-20 ml-12 capitalize"
           >
             <span class="browse-font text-4xl font-medium text-primary">b</span
             ><span class="browse-font text-white">rowse</span> <br />
@@ -37,10 +39,10 @@
           <div v-if="step === 1" class="w-full">
             <form
               @submit.prevent="step = 2"
-              class="mt-24 mb-8 ml-8 grid grid-flow-row gap-6 auto-cols-auto w-full"
+              class="mt-24 mb-8 ml-3 md:ml-8 grid grid-flow-row gap-6 auto-cols-auto w-full"
             >
               <input
-                class="bg-none focus:outline-none p-2 border-b-2 bg-transparent w-11/12 text-white font-medium border-primary placeholder-text-white::placeholder text-xs"
+                class="bg-none focus:outline-none p-3 md:p-3 border-b-2 bg-transparent w-11/12 text-white font-medium border-primary placeholder-text-white::placeholder text-xs"
                 type="text"
                 placeholder="Username"
                 v-model="args.username"
@@ -48,7 +50,7 @@
               />
 
               <input
-                class="bg-none focus:outline-none p-2 border-b-2 bg-transparent w-11/12 text-white font-medium border-primary placeholder-text-white::placeholder text-xs"
+                class="bg-none focus:outline-none p-3 md:p-3 border-b-2 bg-transparent w-11/12 text-white font-medium border-primary placeholder-text-white::placeholder text-xs"
                 type="password"
                 placeholder="Password"
                 v-model="args.password"
@@ -118,9 +120,9 @@
                   background-color: rgba(29, 53, 72, 0.5);
                   background-repeat: no-repeat;
                   background-position: center;
-                  background-size: cover;
+                  background-size: contain;
                 "
-                class="relative justify-self-center border border-primary w-32 h-32"
+                class="relative justify-self-center border border-primary md:w-32 md:h-32 w-28 h-28"
               >
                 <img class="w-full h-full" v-if="url" :src="url" alt="" />
                 <img

@@ -1,17 +1,21 @@
 <template>
   <main class="w-full">
-    <div class="flex justify-around w-full bg-secondary pb-10 text-xs">
+    <div
+      class="flex md:flex-row flex-col md:justify-around w-full bg-secondary pb-5 md:pb-10 text-xs"
+    >
       <div
-        class="title-Font flex flex-col gap-2 items-start self-center mt-7 -ml-20"
+        class="title-Font flex flex-col md:gap-2 ml-4 items-start md:self-center mt-7 md:-ml-40"
       >
-        <label class="text-white text-lg font-medium" for="address"
+        <label
+          class="text-white md:text-lg font-bold md:mb-0 mb-4"
+          for="address"
           >Address</label
         >
 
         <div class="flex items-center gap-3">
           <input
             name="address"
-            class="border-none bg-secondary focus:bg-secondary text-white focus:ring-0 focus:outline-none text-left text-2xl leading-10 font-medium capitalize"
+            class="border-none bg-secondary focus:bg-secondary text-white focus:ring-0 focus:outline-none text-left md:text-2xl md:leading-10 font-medium capitalize"
             v-model="args.address"
             :readonly="!edit.address ? true : false"
           />
@@ -33,7 +37,7 @@
 
         <div class="flex items-center my-8 gap-4">
           <select
-            class="border-none bg-secondary focus:bg-secondary text-white focus:ring-0 focus:outline-none text-left text-sm w-auto font-medium capitalize"
+            class="border-none bg-secondary focus:bg-secondary text-white focus:ring-0 focus:outline-none text-left text-sm w-auto font-bold text-xs md:text-base capitalize"
             v-model="args.houseType"
             name="address"
             id=""
@@ -77,15 +81,17 @@
         </button>
       </div>
 
-      <div class="flex gap-x-16">
-        <div class="flex self-end gap-x-4 -mb-16 justify-end">
+      <div
+        class="flex justify-between px-4 md:px-0 md:justify-start md:gap-x-16"
+      >
+        <div class="flex self-end gap-x-4 md:-mb-16 md:justify-end">
           <TurfButton size="large" class="" color="primary"
             ><span class="text-xs capitalize">view status</span></TurfButton
           >
         </div>
-        <div class="title-Font flex gap-3 -mb-24 justify-end flex-col">
-          <p class="text-white text-xs text-center">
-            <span class="text-xl">{{
+        <div class="title-Font flex gap-3 md:-mb-24 justify-end md:flex-col">
+          <p class="text-white text-xs md:text-center">
+            <span class="md:text-xl text-lg">{{
               (houseUnits && houseUnits.homeDetails.length) || 0
             }}</span>
             <br />
@@ -93,8 +99,8 @@
             with this address
           </p>
 
-          <p class="invisible text-secondary text-xs text-center">
-            <span class="text-xl">{{
+          <p class="hidden text-secondary text-xs md:text-center">
+            <span class="md:text-xl">{{
               (houseUnits && houseUnits.homeDetails.length) || 0
             }}</span
             ><br />
@@ -109,20 +115,20 @@
             !agentProfile.profileImage ||
             !agentProfile.profileImage.length
           "
-          class="invisible -mb-32 bg-cover mt-12 w-52 h-72"
+          class="hidden -mb-32 bg-cover mt-12 w-52 h-72"
           :src="avatar"
           alt=""
         />
 
         <img
           v-else
-          class="invisible -mb-32 bg-contain mt-12 w-52 h-72"
+          class="hidden -mb-32 bg-contain mt-12 w-52 h-72"
           :src="agentProfile.profileImage"
           alt=""
         />
       </div>
     </div>
-    <div class="w-full px-8 my-8">
+    <div class="w-full px-4 md:px-8 my-8">
       <!-- <div
         @click="$router.push({ name: 'WalletPage' })"
         class="cursor-pointer w-80 p-4 bg-backgrd rounded-2xl"
@@ -154,7 +160,7 @@
           >
             <img
               v-if="hd.fileUrl.length"
-              class="bg-contain h-64 w-60"
+              class="object-cover h-64 w-96 md:w-60"
               :src="
                 hd.fileUrl[0].includes('https') ? hd.fileUrl[0] : hd.fileUrl[1]
               "
@@ -162,7 +168,7 @@
             />
             <img
               v-else
-              class="bg-contain h-64 w-60"
+              class="object-cover h-64 w-96 md:w-60"
               src="@/assets/img/house-1.png"
               alt=""
             />
@@ -280,8 +286,9 @@ const houseOptions = ref([
 ]);
 
 onMounted(async () => {
-  await queryAgents();
   await queryHouses();
+  await queryAgents();
+
   args.value.address = houseUnits.value?.address;
   args.value.username = houseUnits.value?.username;
   args.value.houseType = houseUnits.value?.houseType;

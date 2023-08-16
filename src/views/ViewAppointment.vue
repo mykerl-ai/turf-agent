@@ -1,24 +1,30 @@
 <template>
   <main v-if="appointment && appointment.client" class="w-full">
-    <div class="flex justify-between w-full bg-secondary px-16 pb-4 text-xs">
-      <div class="flex gap-8">
-        <div class="-mb-44 mt-12">
+    <div
+      class="flex flex-col md:flex-row justify-between w-full bg-secondary md:px-16 md:pb-4 pb-8 text-xs"
+    >
+      <div class="flex flex-col md:flex-row gap-8 md:gap-8">
+        <div class="md:-mb-44 -mb-52 mt-5 md:mt-12">
           <img
             v-if="!appointment.client.profileImage.length"
-            class="h-7/12 w-72 bg-contain"
+            class="md:h-7/12 md:w-72 w-40 bg-contain"
             src="@/assets/img/house-3.png"
             alt=""
           />
           <img
             v-else
-            class="h-7/12 w-72 bg-contain"
+            class="md:h-7/12 md:w-72 w-40 bg-contain"
             :src="appointment.client.profileImage"
             alt=""
           />
 
-          <p class="text-secondary text-left my-4">Current Status</p>
+          <p class="ml-4 md:ml-0 text-secondary text-left my-4">
+            Current Status
+          </p>
 
-          <div class="flex justify-between items-center">
+          <div
+            class="flex justify-between md:w-auto w-9/12 ml-4 md:ml-0 items-center"
+          >
             <p
               :class="`text-${status[appointment.status]}`"
               class="capitalize text-xs font-bold text-left"
@@ -59,7 +65,9 @@
             </button>
           </div>
 
-          <div class="mt-5 flex justify-between items-center">
+          <div
+            class="mt-5 flex justify-between md:w-auto w-9/12 ml-4 md:ml-0 items-center"
+          >
             <p class="text-secondary capitalize text-xs font-medium text-left">
               Price
             </p>
@@ -72,7 +80,7 @@
 
         <div class="title-Font flex flex-col gap-5 items-start self-center">
           <h1
-            class="text-white text-left text-2xl leading-10 font-medium capitalize"
+            class="text-white text-left ml-20 md:ml-0 md:text-2xl md:leading-10 font-medium capitalize"
           >
             {{ propertyTypes[appointment.house.houseType] }}
           </h1>
@@ -99,7 +107,7 @@
         </div>
       </div> -->
     </div>
-    <div class="grid grid-cols-2 mb-12 pr-44">
+    <div class="grid grid-cols-1 md:grid-cols-2 mb-12 md:pr-44">
       <p class="invisible">
         Lorem ipsum dolor, sit amet consectetur adipisicing elit. Quasi
         laboriosam maxime nulla aliquid veritatis eius animi, nemo officiis
@@ -109,7 +117,10 @@
       <div
         class="col-span-1 mt-12 flex flex-col gap-9 justify-end text-left self-end"
       >
-        <form class="w-full flex flex-col gap-6" action="">
+        <form
+          class="md:w-full w-10/12 ml-1 md:ml-0 flex flex-col gap-4 md:gap-6"
+          action=""
+        >
           <div class="flex flex-col gap-2">
             <label class="text-secondary text-xs" for="">Client Name </label>
             <TurfInput

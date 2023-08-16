@@ -1,8 +1,8 @@
 <template>
-  <div class="w-full h-full grid grid-cols-2 justify-between">
+  <div class="w-full h-full grid grid-cols-1 md:grid-cols-2 justify-between">
     <div
       @click="$refs.input.click()"
-      class="flex flex-col w-full justify-start gap-3 ml-8 self-center"
+      class="flex flex-col w-full justify-start my-3 md:my-0 gap-3 md:ml-8 self-center"
     >
       <!-- <div v-if="url && url.length" class="w-10/12 h-80 p-4">
         <img
@@ -38,9 +38,9 @@
 
     <form
       @submit.prevent="uploadHouse"
-      class="bg-backgrd pb-32 flex flex-col gap-6 text-left p-6 overflow-x-hidden round w-11/12"
+      class="bg-backgrd pb-32 flex flex-col mt-3 md:mt-0 gap-6 text-left pt-6 pl-6 pr-6 md:pt-6 md:pl-6 md:pr-6 overflow-x-hidden round md:w-11/12"
     >
-      <div class="flex w-11/12 flex-col gap-2">
+      <div class="flex md:w-11/12 flex-col gap-2">
         <label class="text-secondary text-xs" for="">Name </label>
         <TurfInput
           readonly
@@ -49,7 +49,7 @@
         ></TurfInput>
       </div>
 
-      <div class="flex w-11/12 flex-col gap-2">
+      <div class="flex md:w-11/12 flex-col gap-2">
         <label class="text-secondary text-xs" for="">Address </label>
         <TurfInput
           :readonly="$route.params.id === 'new' ? false : true"
@@ -57,7 +57,7 @@
           class="text-white"
         ></TurfInput>
       </div>
-      <!-- <div class="flex w-11/12 flex-col gap-2">
+      <!-- <div class="flex md:w-11/12 flex-col gap-2">
         <label class="text-secondary text-xs" for="">House Type </label>
         <TurfInput v-model="args.houseType" class="text-white"></TurfInput>
       </div> -->
@@ -65,7 +65,7 @@
       <div
         v-for="(form, index) in forms"
         :key="index"
-        class="grid grid-cols-2 w-11/12 text-left gap-6 self-start"
+        class="grid grid-cols-2 md:w-11/12 text-left gap-6 self-start"
         :class="
           forms.length > 1 && index !== forms.indexOf(forms[forms.length - 1])
             ? 'bg-primary'
@@ -135,7 +135,7 @@
         +
       </button>
 
-      <TurfButton size="large" class="w-full" color="primary"
+      <TurfButton size="large" class="w-full md:w-11/12" color="primary"
         ><span class="text-xs capitalize">Upload</span></TurfButton
       >
     </form>

@@ -1,7 +1,9 @@
 <template>
-  <main class="grid w-full cursor-pointer-none h-screen grid-cols-3">
-    <div class="image col-span-2"></div>
-    <div class="backdrop cursor-pointer-none h-screen relative">
+  <main
+    class="grid w-full cursor-pointer-none h-screen grid-cols-1 md:grid-cols-3"
+  >
+    <div class="image md:inline-block hidden col-span-2"></div>
+    <div class="backdrop w-full cursor-pointer-none h-screen relative">
       <div
         v-show="step != 1"
         @click="step = 1"
@@ -24,7 +26,7 @@
       <div style="z-index: 1" class="z-50">
         <div class="z-50 w-full">
           <p
-            class="w-full text-white text-3xl leading-10 text-left mt-32 ml-12 capitalize"
+            class="w-full text-white text-3xl leading-10 text-left mt-24 md:mt-32 ml-12 capitalize"
           >
             <span class="browse-font text-4xl font-medium text-primary">b</span
             ><span class="browse-font text-white">rowse</span> <br />
@@ -35,11 +37,9 @@
           </p>
           <!-- step one -->
           <form @submit.prevent="login" v-if="step === 1" class="w-full">
-            <div
-              class="mt-40 mb-8 ml-8 grid grid-flow-col gap-0 auto-cols-auto w-full"
-            >
+            <div class="md:mt-40 mt-16 ml-3 w-11/12">
               <input
-                class="p-2 bg-none focus:outline-none text-xs border-b-2 bg-transparent w-full text-white font-medium border-primary placeholder-text-white::placeholder"
+                class="p-4 bg-none focus:outline-none text-xs border-b-2 bg-transparent w-full text-white font-medium border-primary placeholder-text-white::placeholder"
                 type="email"
                 required
                 v-model="args.email"
@@ -52,17 +52,15 @@
               />
             </div>
 
-            <div
-              class="mb-8 ml-8 grid grid-flow-col gap-0 auto-cols-auto w-full"
-            >
+            <div class="mb-8 ml-3 w-11/12">
               <input
-                class="p-2 bg-none focus:outline-none border-b-2 bg-transparent w-full text-white font-medium border-primary placeholder-text-white::placeholder"
+                class="p-3 bg-none focus:outline-none border-b-2 bg-transparent w-full text-white font-medium border-primary placeholder-text-white::placeholder"
                 type="password"
                 required
                 v-model="args.password"
                 placeholder="Password "
               />
-              <button class="border-none focus:outline-none">
+              <button class="mt-3 border-none focus:outline-none">
                 <img
                   class="border-b-2 border-primary pl-7"
                   src="@/assets/icons/register-arrow.svg"

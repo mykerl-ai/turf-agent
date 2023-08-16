@@ -1,9 +1,9 @@
 <template>
   <main class="w-full">
-    <div class="flex justify-between w-full bg-secondary pl-10 text-xs">
+    <div class="flex justify-between w-full bg-secondary pl-5 md:pl-10 text-xs">
       <div class="flex flex-col gap-5 items-start self-center">
         <h1
-          class="title-Font text-white text-left text-3xl leading-10 font-medium capitalize"
+          class="title-Font text-white text-left text-lg md:text-3xl md:leading-10 font-medium capitalize"
         >
           monitor <br />
           your houses
@@ -12,22 +12,30 @@
           @click="$router.push({ name: 'ProfileView' })"
           size="small"
           color="primary"
-          ><span class="text-sm capitalize"> view profile</span></TurfButton
+          ><span class="md:text-sm text-xs capitalize">
+            view profile</span
+          ></TurfButton
         >
       </div>
 
-      <img class="-mb-5 h-72" src="@/assets/img/agent-hero.png" alt="" />
+      <img
+        class="-mb-5 md:-mr-0 -mr-44 md:h-72"
+        src="@/assets/img/agent-hero.png"
+        alt=""
+      />
     </div>
     <div class="flex flex-row-reverse -mt-7">
       <TurfButton
         @click="$router.push({ name: 'AddHouse', params: { id: 'new' } })"
         size="large"
-        class="mr-32"
+        class="md:mr-32"
         color="primary"
         ><span class="text-xs capitalize">upload a house</span></TurfButton
       >
     </div>
-    <div class="full mt-12 mb-5 px-8 flex items-center gap-8">
+    <div
+      class="w-full mt-12 mb-5 px-2 md:px-12 flex md:justify-start justify-center items-center gap-8"
+    >
       <h3
         @click="toggle = !toggle"
         :class="
@@ -35,7 +43,7 @@
             ? 'border-b-2 border-primary text-primary font-medium'
             : 'text-lightText font-light'
         "
-        class="text-sm cursor-pointer pb-2"
+        class="md:text-sm text-xs cursor-pointer pb-2"
       >
         House Information
       </h3>
@@ -46,18 +54,18 @@
             ? 'border-b-2 border-primary text-primary font-medium'
             : 'text-lightText font-light'
         "
-        class="text-sm cursor-pointer pb-2"
+        class="md:text-sm text-xs cursor-pointer pb-2"
       >
         Pending Appointments
       </h3>
     </div>
-    <div class="w-full my-6 px-4">
+    <div class="w-full md:my-6 px-2 md:px-4">
       <div
         v-show="toggle"
-        class="relative grid grid-cols-4 rounded-xl text-secondary w-full justify-between py-3 px-8"
+        class="relative grid grid-cols-4 rounded-xl text-secondary w-full justify-between md:py-3 pr-6 pl-2 md:px-8"
       >
         <div
-          class="grid grid-cols-4 col-span-4 mb-5 rounded-xl border border-greyBorder text-secondary w-full justify-between py-5 text-xs px-8 shadow-md"
+          class="md:grid hidden grid-cols-4 col-span-4 mb-5 rounded-xl border border-greyBorder text-secondary w-full justify-between py-5 text-xs md:px-8 shadow-md"
         >
           <p class="w-full capitalize text-sm font-medium text-left">address</p>
           <p class="capitalize text-sm font-medium text-left justify-self-end">
@@ -79,19 +87,21 @@
             $router.push({ name: 'AddressDetails', params: { id: house._id } })
           "
         >
-          <div class="flex items-center gap-3 w-full">
-            <div class="w-10 h-10 bg-secondary rounded-full"></div>
+          <div class="flex col-span-2 md:col-span-1 items-center gap-3 w-full">
+            <div
+              class="w-10 h-10 hidden md:block bg-secondary rounded-full"
+            ></div>
             <p class="leading-6 text-xs text-secondary capitalize text-left">
               {{ house.address }}
             </p>
           </div>
-          <div class="flex justify-self-end text-xs items-center">
+          <div class="hidden md:flex justify-self-end text-xs items-center">
             <p class="capitalize text-xs font-bold text-left">
               {{ house.homeDetails.length }}
             </p>
           </div>
 
-          <div class="flex justify-self-end text-xs items-center">
+          <div class="hidden md:flex justify-self-end text-xs items-center">
             <p
               class="capitalize -ml-24 text-xs text-success font-bold text-left"
             >
@@ -102,7 +112,9 @@
             </p>
           </div>
 
-          <div class="flex justify-self-end mr-8 items-center">
+          <div
+            class="col-span-2 md:col-span-1 flex justify-self-end mr-8 items-center"
+          >
             <p class="uppercase font-bold text-xs text-left">edit</p>
           </div>
           <div
@@ -114,10 +126,10 @@
       <!-- Appointments -->
       <div
         v-show="!toggle"
-        class="relative grid grid-cols-4 rounded-xl text-secondary w-full justify-between py-3 px-8"
+        class="relative grid grid-cols-4 rounded-xl text-secondary w-full justify-between md:py-3 pr-6 pl-2 md:px-8"
       >
         <div
-          class="grid grid-cols-5 col-span-5 mb-5 rounded-xl border border-greyBorder text-secondary w-full justify-between py-5 text-xs px-8 shadow-md"
+          class="hidden md:grid grid-cols-5 col-span-5 mb-5 rounded-xl border border-greyBorder text-secondary w-full justify-between py-5 text-xs px-8 shadow-md"
         >
           <p class="w-full capitalize text-sm font-medium text-left">name</p>
           <p
@@ -143,7 +155,7 @@
         <div
           v-for="app in listOfAppointments"
           :key="app._id"
-          class="cursor-pointer relative bg-backgrd grid grid-cols-5 w-full rounded-xl my-3 col-span-5 py-2 px-4 shadow-lg"
+          class="cursor-pointer relative bg-backgrd grid grid-cols-2 md:grid-cols-5 w-full rounded-xl my-3 col-span-5 py-2 md:px-4 px-2 shadow-lg"
         >
           <div
             @click="
@@ -168,9 +180,11 @@
             @click="
               $router.push({ name: 'ViewAppointment', params: { id: app._id } })
             "
-            class="flex justify-self-end text-xs items-center"
+            class="flex justify-self-end text-xs items-end md:items-center"
           >
-            <p class="leading-6 capitalize text-xs font-medium text-left">
+            <p
+              class="md:leading-6 capitalize text-xs font-medium text-right md:text-left"
+            >
               {{ app.address }}
             </p>
           </div>
@@ -178,7 +192,7 @@
             @click="
               $router.push({ name: 'ViewAppointment', params: { id: app._id } })
             "
-            class="flex justify-self-end text-xs items-center"
+            class="hidden md:flex justify-self-end text-xs items-center"
           >
             <p class="capitalize text-xs font-medium text-left">
               {{ app.type }}
@@ -189,14 +203,16 @@
             @click="
               $router.push({ name: 'ViewAppointment', params: { id: app._id } })
             "
-            class="flex justify-self-end text-xs items-center"
+            class="hidden md:flex justify-self-end text-xs items-center"
           >
             <p class="capitalize -ml-24 text-xs font-medium text-left">
               {{ formatAmount(app.price) }}
             </p>
           </div>
 
-          <div class="flex relative gap-x-4 justify-self-end mr-8 items-center">
+          <div
+            class="md:col-span-1 col-span-3 flex relative gap-x-4 justify-self-end mt-6 mb-1 md:mb-0 md:mt-0 mr-5 md:mr-8 items-center"
+          >
             <p
               :class="`text-${status[app.status]}`"
               class="capitalize font-bold text-xs text-left"
@@ -211,7 +227,7 @@
             </div>
             <div
               v-show="showOptions === app._id"
-              class="w-52 absolute group-hover:text-primary flex right-10 flex-col bg-white rounded-2xl shadow-lg"
+              class="md:w-52 absolute group-hover:text-primary flex md:right-10 flex-col bg-white rounded-2xl shadow-lg"
               style="z-index: 1"
             >
               <div

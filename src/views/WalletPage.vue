@@ -4,7 +4,7 @@
       <div class="flex gap-8">
         <div class="flex flex-col gap-5 items-start self-center">
           <h1
-            class="text-white text-left text-2xl leading-10 font-medium capitalize"
+            class="title-Font text-white text-left text-2xl leading-10 font-medium capitalize"
           >
             Your HomeTurf
 
