@@ -37,22 +37,34 @@
     </div>
     <div class="grid grid-cols-2 mb-12 pl-12">
       <div
-        class="col-span-1 mt-32 flex flex-col gap-9 justify-end text-left self-end"
+        class="col-span-1 mt-24 flex flex-col gap-9 justify-end text-left self-end"
       >
         <form class="w-full flex flex-col gap-6" action="">
           <div class="flex flex-col gap-2">
-            <label class="text-secondary text-xs" for="">Agent Name </label>
-            <TurfInput class="text-white" v-model="data.name"></TurfInput>
+            <label class="text-secondary text-xs" for="">Account Number </label>
+            <TurfInput
+              :value="agentProfile.paymentDetails.accountNumber"
+              :readonly="true"
+              class="text-white"
+            ></TurfInput>
           </div>
 
           <div class="flex flex-col gap-2">
-            <label class="text-secondary text-xs" for="">Address </label>
-            <TurfInput class="text-white" v-model="data.address"></TurfInput>
+            <label class="text-secondary text-xs" for="">Account Name </label>
+            <TurfInput
+              :readonly="true"
+              :value="agentProfile.paymentDetails.accountName"
+              class="text-white"
+            ></TurfInput>
           </div>
 
           <div class="flex flex-col gap-2">
-            <label class="text-secondary text-xs" for="">Agent BVN </label>
-            <TurfInput class="text-white" v-model="data.num"></TurfInput>
+            <label class="text-secondary text-xs" for="">Bank Name </label>
+            <TurfInput
+              :readonly="true"
+              :value="agentProfile.paymentDetails.bankName"
+              class="text-white"
+            ></TurfInput>
           </div>
         </form>
       </div>
@@ -68,15 +80,29 @@
 </template>
 
 <script setup>
+import { useDataStore } from "@/stores/data.js";
+
 import TurfButton from "@/components/ButtonNew.vue";
 import TurfInput from "@/components/TextInput.vue";
 
-import { ref } from "vue";
+import { computed, onMounted } from "vue";
 
-const data = ref({
-  name: "Charly Koman",
-  address: "42/49  Oceanview  Road  Molont Cresent , Ikoyi  Lagos",
-  num: "09055222598",
+const store = useDataStore();
+
+const { query } = store;
+const agentProfile = computed(() => store.getAgentData);
+
+async function queryAgents() {
+  await query({
+    endpoint: "FetchAgent",
+    payload: {},
+    service: "GENERAL",
+    storeKey: "agentData",
+  });
+}
+
+onMounted(async () => {
+  await queryAgents();
 });
 </script>
 

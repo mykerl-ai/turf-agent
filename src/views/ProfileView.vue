@@ -13,7 +13,7 @@
           {{ agentProfile.username }}
         </h1>
         <h1
-          class="title-Font text-white text-left text-lg md:text-2xl md:leading-10 font-medium capitalize"
+          class="md:hidden title-Font text-white text-left text-lg md:text-2xl md:leading-10 font-medium capitalize"
         >
           Agent {{ agentProfile.username }}
         </h1>
@@ -69,7 +69,7 @@
       </div>
     </div>
     <div class="w-full px-4 mt-32 md:px-8 md:my-8">
-      <div
+      <!-- <div
         @click="$router.push({ name: 'WalletPage' })"
         class="cursor-pointer w-80 p-4 bg-backgrd rounded-2xl"
       >
@@ -83,6 +83,20 @@
           You need to create a wallet to subscribe and also get payment from
           teenants
         </p>
+      </div> -->
+
+      <div
+        @click="$router.push({ name: 'WalletPage' })"
+        class="bg-primary rounded-xl p-6 cursor-pointer flex flex-col shadow-2xl justify-between w-80 h-44"
+      >
+        <div class="flex justify-between">
+          <img class="w-20" src="@/assets/icon/turf-logo.svg" alt="" />
+          <span class="self-start text-white">3,000,000</span>
+        </div>
+        <span
+          class="bg-secondary p-4 rounded-full text-white text-xs font-medium self-end justify-self-end"
+          >Fund Wallet</span
+        >
       </div>
 
       <div class="mt-9 text-sm">
