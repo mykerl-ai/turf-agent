@@ -313,7 +313,7 @@ export const helperFunctions = {
   async uploadFileToServer(base64Strings) {
     if (base64Strings && base64Strings.length > 0) {
       const operation = "uploadImages";
-      const query = `mutation ${operation}($files: [Base64!]!) {
+      const query = `mutation ${operation}($files: [String!]!) {
         ${operation}(files: $files) 
       }`;
 
@@ -323,7 +323,8 @@ export const helperFunctions = {
 
       try {
         const response = await axios.post(
-          "http://localhost:4000/graphql",
+          // "http://localhost:4000/graphql",
+          "https://torfserver.onrender.com/graphql",
           {
             query,
             variables,
