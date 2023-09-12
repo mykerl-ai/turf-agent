@@ -323,7 +323,8 @@ export const helperFunctions = {
 
       try {
         const response = await axios.post(
-          "http://localhost:4000/graphql",
+          // "http://localhost:4000/graphql",
+          "https://torfserver.onrender.com/graphql",
           {
             query,
             variables,
