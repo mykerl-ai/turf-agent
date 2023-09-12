@@ -144,6 +144,34 @@
 
               <input
                 class="bg-none focus:outline-none p-2 border-b-2 bg-transparent w-11/12 text-white font-medium border-primary placeholder-text-white::placeholder text-xs"
+                type="text"
+                placeholder="First Name"
+                v-model="args.firstName"
+              />
+
+              <input
+                class="bg-none focus:outline-none p-2 border-b-2 bg-transparent w-11/12 text-white font-medium border-primary placeholder-text-white::placeholder text-xs"
+                type="text"
+                placeholder="Last Name"
+                v-model="args.lastName"
+              />
+
+              <input
+                class="bg-none focus:outline-none p-2 border-b-2 bg-transparent w-11/12 text-white font-medium border-primary placeholder-text-white::placeholder text-xs"
+                type="text"
+                placeholder="Middle Name"
+                v-model="args.middleName"
+              />
+
+              <input
+                class="bg-none focus:outline-none p-2 border-b-2 bg-transparent w-11/12 text-white font-medium border-primary placeholder-text-white::placeholder text-xs"
+                type="text"
+                placeholder="Phone Number"
+                v-model="args.phone"
+              />
+
+              <input
+                class="bg-none focus:outline-none p-2 border-b-2 bg-transparent w-11/12 text-white font-medium border-primary placeholder-text-white::placeholder text-xs"
                 type="email"
                 placeholder="Email"
                 v-model="args.email"
@@ -248,7 +276,8 @@ const router = useRouter();
 const toast = useToast();
 
 const { mutate } = store;
-const { uploadFileToServer, convertFileToBase64 } = helperFunctions;
+const { uploadFileToServer, convertFileToBase64, processNumber } =
+  helperFunctions;
 
 const props = defineProps({
   allowedTypes: {
@@ -266,6 +295,10 @@ const args = ref({
   address: "",
   dob: "",
   email: "",
+  firstName: "",
+  lastName: "",
+  middleName: "",
+  phone: "",
   password: "",
   profileImage: "",
   state: "",
@@ -391,6 +424,7 @@ async function previewFiles(e) {
 // }
 
 async function registerAgent() {
+  args.value.phone = processNumber(String(args.value.phone));
   try {
     // if (isValidBase64(url.value)) {
     //   toast.success("Valid file");
@@ -412,7 +446,6 @@ async function registerAgent() {
       },
       // service: "EMP",
     });
-    console.log(res, "reso");
     if (res && res.token) {
       toast.success("Sign up successful");
       window.localStorage.setItem("token", res.token);

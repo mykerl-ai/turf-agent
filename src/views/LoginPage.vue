@@ -37,7 +37,7 @@
           </p>
           <!-- step one -->
           <form @submit.prevent="login" v-if="step === 1" class="w-full">
-            <div class="md:mt-40 mt-16 ml-3 w-11/12">
+            <div class="md:mt-20 mt-16 ml-3 w-11/12">
               <input
                 class="p-4 bg-none focus:outline-none text-xs border-b-2 bg-transparent w-full text-white font-medium border-primary placeholder-text-white::placeholder"
                 type="email"
@@ -85,7 +85,7 @@
               >Forgot Password?</TurfButton
             >
 
-            <div class="mt-32">
+            <div class="mt-24">
               <div class="text-xs font-medium text-center text-white">
                 Don't have an account?
                 <span class="text-primary">Click below</span>

@@ -2,12 +2,25 @@ query FetchAgent {
   FetchAgent {
     _id
     username
+    firstName
+    middleName
+    lastName
+    phone
     password
     profileImage
     email
     dob
     state
     address
+    paymentDetails {
+      accountNumber
+      accountName
+      accountType
+      bankName
+      slug
+    }
     token
+    createdAt
+    updatedAt
   }
 }

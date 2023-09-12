@@ -46,22 +46,19 @@ export const helperFunctions = {
     }
   },
   processNumber(phoneNumber) {
+    let formatted = "";
     if (phoneNumber) {
       let phone = phoneNumber;
       let firstDigit = phone.charAt(0);
       if (firstDigit == "0") {
-        let formatted = phone.replace("0", "234").replace(/\s+/g, "");
-        return formatted;
+        formatted = phone.replace("0", "234").replace(/\s+/g, "");
       } else if (firstDigit == 2) {
-        let formatted = phone.replace(/\s+/g, "");
-        return formatted;
+        formatted = phone.replace(/\s+/g, "");
       } else if (firstDigit == "+") {
-        let formatted = phone.substring(1).replace(/\s+/g, "");
-        return formatted;
+        formatted = phone.substring(1).replace(/\s+/g, "");
       }
-    } else {
-      return "";
     }
+    return String(formatted);
   },
   truncateObj(obj) {
     if (obj === undefined || obj === null) {
@@ -313,7 +310,7 @@ export const helperFunctions = {
   async uploadFileToServer(base64Strings) {
     if (base64Strings && base64Strings.length > 0) {
       const operation = "uploadImages";
-      const query = `mutation ${operation}($files: [Base64!]!) {
+      const query = `mutation ${operation}($files: [String!]!) {
         ${operation}(files: $files) 
       }`;
 
