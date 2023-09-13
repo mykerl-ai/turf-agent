@@ -12,6 +12,7 @@ query FetchAgent {
     dob
     state
     address
+    walletBalance
     paymentDetails {
       accountNumber
       accountName
