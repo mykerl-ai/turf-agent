@@ -27,10 +27,13 @@
         >
           <div class="flex justify-between">
             <img class="w-20" src="@/assets/icon/turf-logo.svg" alt="" />
-            <span class="self-start text-white">3,000,000</span>
+            <span class="self-start font-medium text-base text-white">{{
+              formatAmount(agentProfile.walletBalance)
+            }}</span>
           </div>
-          <span class="text-white self-end justify-self-end"
-            >2856 - 9842 - 6540 - 4298</span
+          <span
+            class="text-white tracking-widest font-medium self-end justify-self-end"
+            >{{ agentProfile.paymentDetails.accountName }}</span
           >
         </div>
       </div>
@@ -81,11 +84,14 @@
 
 <script setup>
 import { useDataStore } from "@/stores/data.js";
+import { helperFunctions } from "@/composable/HelperFunctions";
 
 import TurfButton from "@/components/ButtonNew.vue";
 import TurfInput from "@/components/TextInput.vue";
 
 import { computed, onMounted } from "vue";
+
+const { formatAmount } = helperFunctions;
 
 const store = useDataStore();
 

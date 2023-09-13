@@ -91,7 +91,9 @@
       >
         <div class="flex justify-between">
           <img class="w-20" src="@/assets/icon/turf-logo.svg" alt="" />
-          <span class="self-start text-white">3,000,000</span>
+          <span class="self-start font-medium text-white">{{
+            formatAmount(agentProfile.walletBalance)
+          }}</span>
         </div>
         <span
           class="bg-secondary p-4 rounded-full text-white text-xs font-medium self-end justify-self-end"
