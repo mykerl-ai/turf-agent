@@ -1,7 +1,7 @@
 <template>
   <main>
     <button
-      class="focus:outline-none relative whitespace-nowrap rounded-xl text-xs bg-primary"
+      class="focus:outline-none relative whitespace-nowrap rounded-xl text-xs"
       :class="buttonStyle"
       v-bind="$attrs"
     >
@@ -82,9 +82,9 @@ const buttonStyle = computed(() => {
 
 const background = computed(() => {
   let style = "";
-  if (props.variant.toLocaleLowerCase() === "outlined") {
+  if (props.variant.toLowerCase() === "outlined") {
     const border = props.border ? `border-${props.border}` : "border";
-    style = `${border} border-${props.color} hover:border-${props.color}-hover hover:text-white`;
+    style = `${border} border-${props.color} hover:border-${props.color}-hover hover:text-${props.color} bg-none`;
   } else if (props.variant.toLocaleLowerCase() === "text") {
     style = ``;
   } else {
@@ -101,7 +101,7 @@ const textColor = computed(() => {
     props.variant.toLocaleLowerCase() === "outlined" ||
     props.variant.toLocaleLowerCase() === "text"
   ) {
-    style = `text-${props.color} hover:text-white`;
+    style = `text-${props.color} `;
   } else {
     style = `text-white`;
   }

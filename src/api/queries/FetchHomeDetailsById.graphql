@@ -2,6 +2,8 @@ query FetchHomeDetailsById($fetchHomeDetailsByIdId: ID!) {
   FetchHomeDetailsById(id: $fetchHomeDetailsByIdId) {
     _id
     agentId
+    tenant
+    dueDate
     bedRoom
     toilet
     bathRoom

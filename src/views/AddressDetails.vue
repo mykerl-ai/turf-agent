@@ -84,7 +84,7 @@
       <div
         class="flex justify-between px-4 md:px-0 md:justify-start md:gap-x-16"
       >
-        <div class="flex self-end gap-x-4 md:-mb-16 md:justify-end">
+        <div class="invisible flex self-end gap-x-4 md:-mb-16 md:justify-end">
           <TurfButton size="large" class="" color="primary"
             ><span class="text-xs capitalize">view status</span></TurfButton
           >

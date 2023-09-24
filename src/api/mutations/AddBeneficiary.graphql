@@ -1,0 +1,6 @@
+mutation AddBeneficiary($input: BeneficiaryInput!) {
+  AddBeneficiary(input: $input) {
+    success
+    data
+  }
+}

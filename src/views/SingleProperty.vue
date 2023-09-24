@@ -80,7 +80,14 @@
             alt=""
           />
           <p class="text-xs text-left text-white">Due date</p>
-          <p class="text-sm text-left text-white">59</p>
+          <p class="text-sm text-left text-white">
+            {{
+              (homeWithDetails &&
+                homeWithDetails.dueDate &&
+                homeWithDetails.dueDate.slice(0, 10)) ||
+              "N/A"
+            }}
+          </p>
         </div>
 
         <div class="flex md:self-end gap-x-0 md:-mb-10 mt-5 md:justify-end">
@@ -205,14 +212,21 @@
         </div>
       </div>
       <div
+        v-if="homeWithDetails"
         class="col-span-1 md:mt-2 mt-5 flex flex-col gap-9 justify-end text-left self-end"
       >
         <form class="w-full flex flex-col gap-6" action="">
           <div class="flex flex-col gap-2">
             <label class="text-secondary text-xs" for="">Tenant Name </label>
-            <TurfInput :value="houseDetails.username" class="text-white">{{
-              houseDetails.username
-            }}</TurfInput>
+            <TurfInput
+              :value="
+                homeWithDetails.tenant &&
+                homeWithDetails.tenant.firstName &&
+                `${homeWithDetails.tenant.firstName} ${homeWithDetails.tenant.lastName}`
+              "
+              class="text-white capitalize"
+              >{{ homeWithDetails.tenant.firstName }}</TurfInput
+            >
           </div>
 
           <div class="flex flex-col gap-2">
@@ -224,7 +238,14 @@
 
           <div class="flex flex-col gap-2">
             <label class="text-secondary text-xs" for="">Tenant Number </label>
-            <TurfInput class="text-white"></TurfInput>
+            <TurfInput
+              class="text-white"
+              :value="
+                homeWithDetails.tenant &&
+                homeWithDetails.tenant.phone &&
+                homeWithDetails.tenant.phone
+              "
+            ></TurfInput>
           </div>
         </form>
 

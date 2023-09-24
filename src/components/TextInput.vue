@@ -27,10 +27,14 @@
   </span> -->
     <input
       ref="inputField"
-      :class="[errorClass, emp ? 'py-1' : 'py-3 p-16']"
+      :class="[
+        errorClass,
+        emp ? 'py-1' : 'py-3 p-16',
+        forSelect ? 'bg-white' : 'inputbg',
+      ]"
       :style="emp ? 'height: 38px' : 'height: 48px'"
       style="color: black"
-      class="inputbg w-full text-secondary font-medium text-sm leading-2 focus:outline-none border-0 px-4 block appearance-none m-0"
+      class="rounded-2xl w-full text-secondary font-medium text-sm leading-2 focus:outline-none border-0 px-4 block appearance-none m-0"
       :value="formatAmount"
       v-bind="$attrs"
       :placeholder="!isFocused ? $attrs.placeholder : ''"

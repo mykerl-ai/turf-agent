@@ -37,6 +37,8 @@ module.exports = {
       gradient: "rgb(134, 133, 133)",
       lightText: "#A1A1A1",
       inputcolor: "#ECF0F3",
+      dividerColor: "#E1E2E5",
+      boxBorder: "#E0E0E0",
       grey: {
         default: "#A1A1A1",
         light: "#909090",

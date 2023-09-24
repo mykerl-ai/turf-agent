@@ -23,7 +23,7 @@
         <div
           class="hidden md:flex md:self-end gap-x-4 md:-mb-16 md:justify-end"
         >
-          <TurfButton size="large" class="" color="primary"
+          <TurfButton size="large" class="invisible" color="primary"
             ><span class="text-xs capitalize">view status</span></TurfButton
           >
         </div>
@@ -97,7 +97,7 @@
         </div>
         <span
           class="bg-secondary p-4 rounded-full text-white text-xs font-medium self-end justify-self-end"
-          >Fund Wallet</span
+          >View Wallet</span
         >
       </div>
 

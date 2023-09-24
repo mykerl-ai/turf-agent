@@ -1,17 +1,30 @@
 <template>
   <main class="w-full">
-    <div class="flex justify-between w-full bg-secondary px-16 pb-20 text-xs">
+    <div
+      class="flex flex-col md:flex-row justify-between w-full bg-secondary px-2 md:px-16 pb-16 md:pb-24 text-xs"
+    >
       <div class="flex gap-8">
-        <div class="flex flex-col gap-5 items-start self-center">
+        <div class="flex flex-col gap-5 items-start pt-4 md:pt-0 self-center">
           <h1
-            class="title-Font text-white text-left text-2xl leading-10 font-medium capitalize"
+            class="title-Font text-white text-left text-base md:text-2xl leading-10 font-medium capitalize"
           >
             Your HomeTurf
 
             <br />
             Wallet
           </h1>
-          <div class="flex self-start gap-x-4 -mb-44 mt-5 justify-start">
+          <div
+            class="flex flex-col md:flex-row self-start gap-4 md:-mb-44 md:mt-5 items-start md:items-center justify-start"
+          >
+            <TurfButton
+              @click="bankModal = true"
+              size="large"
+              class=""
+              color="primary"
+              ><span class="text-xs capitalize"
+                >Withdraw Funds
+              </span></TurfButton
+            >
             <TurfButton size="large" class="" color="primary"
               ><span class="text-xs capitalize"
                 >Request Payment Slip
@@ -21,7 +34,7 @@
         </div>
       </div>
 
-      <div class="mt-24">
+      <div class="mt-8 md:mt-24">
         <div
           class="bg-primary rounded-xl p-6 flex flex-col justify-between w-80 h-44 -mb-32"
         >
@@ -38,11 +51,11 @@
         </div>
       </div>
     </div>
-    <div class="grid grid-cols-2 mb-12 pl-12">
+    <div class="grid grid-cols-2 mb-12 pl-4 md:pl-12">
       <div
-        class="col-span-1 mt-24 flex flex-col gap-9 justify-end text-left self-end"
+        class="col-span-2 md:col-span-1 mt-24 flex flex-col gap-9 md:justify-end text-left self-end"
       >
-        <form class="w-full flex flex-col gap-6" action="">
+        <form class="w-10/12 md:w-full flex flex-col gap-6" action="">
           <div class="flex flex-col gap-2">
             <label class="text-secondary text-xs" for="">Account Number </label>
             <TurfInput
@@ -79,6 +92,44 @@
         numquam.
       </p>
     </div>
+
+    <TurfModal v-if="bankModal" @close="bankModal = false">
+      <template v-slot:header>
+        <h4 class="md:text-xl font-bold">Add Beneficiary</h4></template
+      >
+      <form
+        @submit.prevent="addBeneficiary"
+        class="w-full justify-center px-4 grid grid-cols-1 md:grid-cols-2 gap-y-6 gap-x-2 items-center h-auto overflow-y-scoll"
+      >
+        <BankSelect
+          class="w-full col-span-1"
+          :value="args.bankName"
+          @update="updateArgs($event)"
+        />
+        <TurfInput
+          class="w-full"
+          placeholder="Account Number"
+          :forSelect="false"
+          v-model="args.accountNumber"
+          type="number"
+          :maxLength="10"
+          required
+        ></TurfInput>
+        <!-- <TurfInput
+          class="w-full hidden"
+          placeholder="Account Name"
+          :forSelect="false"
+          v-model="args.accountName"
+        ></TurfInput> -->
+
+        <TurfButton type="button" class="w-full" variant="outlined"
+          >Cancel</TurfButton
+        >
+        <TurfButton type="submit" class="w-full">Submit</TurfButton>
+      </form>
+    </TurfModal>
+
+    <TurfLoader v-if="loading" />
   </main>
 </template>
 
@@ -86,17 +137,22 @@
 import { useDataStore } from "@/stores/data.js";
 import { helperFunctions } from "@/composable/HelperFunctions";
 
+import BankSelect from "@/components/BankSelect.vue";
 import TurfButton from "@/components/ButtonNew.vue";
 import TurfInput from "@/components/TextInput.vue";
+import { useToast } from "vue-toastification";
 
-import { computed, onMounted } from "vue";
+import { computed, onMounted, ref } from "vue";
 
 const { formatAmount } = helperFunctions;
 
 const store = useDataStore();
+const toast = useToast();
 
-const { query } = store;
+const { mutate, query } = store;
 const agentProfile = computed(() => store.getAgentData);
+const bankModal = ref(false);
+const loading = ref(false);
 
 async function queryAgents() {
   await query({
@@ -106,7 +162,40 @@ async function queryAgents() {
     storeKey: "agentData",
   });
 }
+const args = ref({
+  accountName: "",
+  accountNumber: "",
+  bankCode: "",
+  bankName: "",
+});
+function updateArgs(e) {
+  args.value.bankName = e.name;
+  args.value.accountName = e.accountName;
+  args.value.accountNumber = e.accountNumber;
+  args.value.bankCode = e.code;
+}
 
+async function addBeneficiary() {
+  try {
+    loading.value = true;
+
+    let res = await mutate({
+      endpoint: "AddBeneficiary",
+      data: {
+        input: args.value,
+      },
+      service: "GENERAL",
+    });
+    if (res && res.success) {
+      bankModal.value = false;
+      toast.success("Beneficiary added successfully");
+    }
+  } catch (e) {
+    console.log(e);
+  } finally {
+    loading.value = false;
+  }
+}
 onMounted(async () => {
   await queryAgents();
 });
