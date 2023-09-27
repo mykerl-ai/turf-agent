@@ -10,6 +10,7 @@ export const useDataStore = defineStore("main", {
     singleAppointment: {},
     appointments: [],
     singleHomeDetail: {},
+    beneficiary: [],
   }),
 
   getters: {
@@ -18,6 +19,7 @@ export const useDataStore = defineStore("main", {
     getAppointments: (state) => state.appointments,
     getSingleAppointment: (state) => state.singleAppointment,
     getSingleHomeDetail: (state) => state.singleHomeDetail,
+    getBeneficiary: (state) => state.beneficiary,
   },
 
   actions: {

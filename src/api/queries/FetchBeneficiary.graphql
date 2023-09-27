@@ -1,0 +1,12 @@
+query FetchBeneficiary {
+  FetchBeneficiary {
+    _id
+    accountName
+    accountNumber
+    bankName
+    bankCode
+    agent
+    createdAt
+    updatedAt
+  }
+}

@@ -1,0 +1,7 @@
+mutation WithdrawFunds($input: BeneficiaryInput!, $amount: Float!) {
+  WithdrawFunds(input: $input, amount: $amount) {
+    success
+    data
+    message
+  }
+}

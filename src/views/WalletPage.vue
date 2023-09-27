@@ -14,10 +14,10 @@
             Wallet
           </h1>
           <div
-            class="flex flex-col md:flex-row self-start gap-4 md:-mb-44 md:mt-5 items-start md:items-center justify-start"
+            class="flex flex-row md:flex-row self-start gap-4 md:-mb-44 md:mt-5 items-start md:items-center justify-start"
           >
             <TurfButton
-              @click="bankModal = true"
+              @click="toggleOpen"
               size="large"
               class=""
               color="primary"
@@ -36,7 +36,7 @@
 
       <div class="mt-8 md:mt-24">
         <div
-          class="bg-primary rounded-xl p-6 flex flex-col justify-between w-80 h-44 -mb-32"
+          class="bg-primary rounded-xl p-6 flex flex-col justify-between w-full md:w-80 h-44 -mb-32"
         >
           <div class="flex justify-between">
             <img class="w-20" src="@/assets/icon/turf-logo.svg" alt="" />
@@ -129,6 +129,39 @@
       </form>
     </TurfModal>
 
+    <TurfModal v-if="withdrawModal" @close="withdrawModal = false">
+      <template v-slot:header>
+        <h4 class="md:text-xl font-bold">Withdraw to bank</h4></template
+      >
+      <form
+        @submit.prevent="withdrawFunds"
+        class="w-full justify-center px-4 grid grid-cols-1 md:grid-cols-2 gap-y-6 gap-x-2 items-center h-auto overflow-y-scoll"
+      >
+        <BankSelect
+          class="w-full col-span-1"
+          :data="customBankData"
+          :value="args.accountName"
+          :withdrawal="true"
+          :beneficiary="true"
+          @update="updateArgs($event)"
+        />
+        <TurfInput
+          class="w-full"
+          placeholder="Amount"
+          :forSelect="false"
+          :format="true"
+          v-model="withdrawalAmount"
+          type="text"
+          required
+        ></TurfInput>
+
+        <TurfButton type="button" class="w-full" variant="outlined"
+          >Cancel</TurfButton
+        >
+        <TurfButton type="submit" class="w-full">Submit</TurfButton>
+      </form>
+    </TurfModal>
+
     <TurfLoader v-if="loading" />
   </main>
 </template>
@@ -136,6 +169,7 @@
 <script setup>
 import { useDataStore } from "@/stores/data.js";
 import { helperFunctions } from "@/composable/HelperFunctions";
+import banks from "@/utils/banks";
 
 import BankSelect from "@/components/BankSelect.vue";
 import TurfButton from "@/components/ButtonNew.vue";
@@ -151,8 +185,38 @@ const toast = useToast();
 
 const { mutate, query } = store;
 const agentProfile = computed(() => store.getAgentData);
+const beneficiaries = computed(() => store.getBeneficiary);
 const bankModal = ref(false);
 const loading = ref(false);
+
+const bankUrl = (name) => {
+  if (name) {
+    const data = banks.filter((x) => {
+      return name.toLowerCase().indexOf(x.name.toLowerCase()) > -1 ? x : "";
+    });
+    return data[0];
+  } else {
+    return {
+      logo: "",
+    };
+  }
+};
+const customBankData = computed(() => {
+  let data = [];
+  data =
+    beneficiaries.value &&
+    beneficiaries.value.map((bank) => {
+      return {
+        name: bank.bankName,
+        code: bank.bankCode,
+        logo: bankUrl(bank.bankName).logo,
+        accountName: bank.accountName,
+        accountNumber: bank.accountNumber,
+      };
+    });
+
+  return data;
+});
 
 async function queryAgents() {
   await query({
@@ -162,6 +226,7 @@ async function queryAgents() {
     storeKey: "agentData",
   });
 }
+const withdrawalAmount = ref(0);
 const args = ref({
   accountName: "",
   accountNumber: "",
@@ -196,8 +261,60 @@ async function addBeneficiary() {
     loading.value = false;
   }
 }
+
+async function withdrawFunds() {
+  try {
+    loading.value = true;
+
+    let res = await mutate({
+      endpoint: "WithdrawFunds",
+      data: {
+        input: {
+          bankCode: args.value.bankCode,
+          accountNumber: args.value.accountNumber,
+        },
+        amount: withdrawalAmount.value,
+      },
+      service: "GENERAL",
+    });
+    if (res && res.success) {
+      bankModal.value = false;
+      withdrawModal.value = false;
+      toast.success(res.message);
+    } else if (res && !res.success) {
+      toast.error(res.message);
+    }
+  } catch (e) {
+    console.log(e);
+  } finally {
+    loading.value = false;
+  }
+}
+
+async function queryBeneficiary() {
+  try {
+    await query({
+      endpoint: "FetchBeneficiary",
+      payload: {},
+      service: "GENERAL",
+      storeKey: "beneficiary",
+    });
+  } catch (e) {
+    console.log(e);
+  }
+}
+
+const withdrawModal = ref(false);
+function toggleOpen() {
+  if (beneficiaries.value) {
+    withdrawModal.value = true;
+    return;
+  }
+  bankModal.value = true;
+}
 onMounted(async () => {
   await queryAgents();
+  await queryBeneficiary();
 });
 </script>
 

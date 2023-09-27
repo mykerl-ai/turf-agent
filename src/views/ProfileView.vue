@@ -62,13 +62,13 @@
 
         <img
           v-else
-          class="-mb-32 object-contain rounded-3xl mt-12 w-52 h-52 md:h-72"
+          class="-mb-32 object-contain rounded-3xl mx-auto md:mx-0 mt-12 w-32 md:w-52 h-32 md:h-72"
           :src="agentProfile.profileImage"
           alt=""
         />
       </div>
     </div>
-    <div class="w-full px-4 mt-32 md:px-8 md:my-8">
+    <div class="w-full px-4 mt-24 md:mt-10 md:px-8 md:my-8">
       <!-- <div
         @click="$router.push({ name: 'WalletPage' })"
         class="cursor-pointer w-80 p-4 bg-backgrd rounded-2xl"
@@ -87,7 +87,7 @@
 
       <div
         @click="$router.push({ name: 'WalletPage' })"
-        class="bg-primary rounded-xl p-6 cursor-pointer flex flex-col shadow-2xl justify-between w-80 h-44"
+        class="bg-primary rounded-xl p-6 cursor-pointer flex flex-col shadow-2xl justify-between w-full md:w-80 h-44"
       >
         <div class="flex justify-between">
           <img class="w-20" src="@/assets/icon/turf-logo.svg" alt="" />
@@ -114,7 +114,7 @@
           >
             <img
               v-if="hd.fileUrl.length"
-              class="object-contain md:h-64 w-80 md:w-auto"
+              class="object-cover rounded-2xl md:h-64 w-full md:w-auto"
               :src="
                 hd.fileUrl[0].includes('https') ? hd.fileUrl[0] : hd.fileUrl[1]
               "
@@ -122,21 +122,19 @@
             />
             <img
               v-else
-              class="object-contain md:h-64 w-80 md:w-auto"
+              class="object-contain md:h-64 w-full md:w-auto"
               src="@/assets/img/house-1.png"
               alt=""
             />
 
             <span
-              style="color: #a1a1a1"
-              class="text-lightText font-bold mt-2 text-left text-xs leading-5"
+              class="text-dark-800 font-bold mt-4 text-left text-lg leading-5"
             >
               {{ formatAmount(hd.price) }}
             </span>
 
             <span
-              style="color: #a1a1a1"
-              class="text-lightText font-bold mt-2 text-left text-xs leading-5"
+              class="text-dark-800 mt-2 text-left text-sm text-justify leading-6 w-80"
             >
               {{ hd.description }}
             </span>

@@ -34,7 +34,13 @@
           v-else
         >
           {{
-            value == "" ? "Bank Name" : beneficiary ? selectedLabel : value
+            value == ""
+              ? beneficiary
+                ? "Select Beneficiary"
+                : "Bank Name"
+              : beneficiary
+              ? selectedLabel
+              : value
           }}</span
         >
 
