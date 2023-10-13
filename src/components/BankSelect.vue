@@ -69,7 +69,7 @@
                   />
                 </span>
               </div>
-              <span class="font-bold">
+              <span class="font-bold text-white">
                 {{ beneficiary ? bank.accountName : bank.name }}</span
               >
             </div>
