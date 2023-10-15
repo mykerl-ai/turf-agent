@@ -177,7 +177,9 @@ export default {
 
     removeAlphabet(arg) {
       arg = arg.toString();
-      let regex = /[a-zA-Z]/g;
+      // let regex = /[a-zA-Z]/g;
+      let regex = /[^0-9.]/g; // Include decimal point in the regex
+
       arg = arg.replace(regex, "");
       this.$emit("update:modelValue", arg === "" ? arg : Number(arg));
       return arg;
