@@ -143,6 +143,7 @@
           :value="args.accountName"
           :withdrawal="true"
           :beneficiary="true"
+          :addBankData="true"
           @update="updateArgs($event)"
         />
         <TurfInput
@@ -306,7 +307,7 @@ async function queryBeneficiary() {
 
 const withdrawModal = ref(false);
 function toggleOpen() {
-  if (beneficiaries.value) {
+  if (beneficiaries.value && beneficiaries.value.length) {
     withdrawModal.value = true;
     return;
   }
