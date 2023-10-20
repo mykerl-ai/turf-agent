@@ -2,7 +2,14 @@
   <main
     class="grid w-full cursor-pointer-none h-screen grid-cols-1 md:grid-cols-3"
   >
-    <div class="image md:inline-block hidden col-span-2"></div>
+    <div class="image md:inline-block hidden col-span-2">
+      <img
+        @click="$router.push({ name: 'Real' })"
+        class="cursor-pointer shadow-inner p-6"
+        src="@/assets/icon/logo.svg"
+        alt=""
+      />
+    </div>
     <div class="backdrop w-full cursor-pointer-none h-screen relative">
       <div
         v-show="step != 1"

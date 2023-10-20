@@ -23,7 +23,11 @@
           class="text-primary font-bold text-xs"
           >ABOUT US</span
         >
-        <span class="text-primary font-bold text-xs">LOGIN</span>
+        <span
+          @click="$router.push({ name: 'Login' })"
+          class="text-primary font-bold text-xs"
+          >LOGIN</span
+        >
       </div>
     </div>
   </div>
