@@ -129,7 +129,7 @@
             @click="showStatus = !showStatus"
             class="focus:outline-none border border-primary px-4 py-2 text-xs text-primary capitalize"
           >
-            edit
+            edit status
           </button>
 
           <div
