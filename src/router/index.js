@@ -4,6 +4,18 @@ import LoginPage from "../views/LoginPage.vue";
 const routes = [
   {
     path: "/",
+    name: "Real",
+    component: () =>
+      import(/* webpackChunkName: "about" */ "../views/RealHome.vue"),
+  },
+  {
+    path: "/about",
+    name: "About",
+    component: () =>
+      import(/* webpackChunkName: "about" */ "../views/AboutView.vue"),
+  },
+  {
+    path: "/login",
     name: "Login",
     component: LoginPage,
   },
@@ -14,12 +26,6 @@ const routes = [
       import(/* webpackChunkName: "about" */ "../views/HomeView.vue"),
   },
 
-  {
-    path: "/real",
-    name: "Real",
-    component: () =>
-      import(/* webpackChunkName: "about" */ "../views/RealHome.vue"),
-  },
   {
     path: "/register",
     name: "Register",

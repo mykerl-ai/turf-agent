@@ -157,9 +157,6 @@ import { useToast } from "vue-toastification";
 import { useDataStore } from "@/stores/data.js";
 import { useRoute, useRouter } from "vue-router";
 import { ref, computed, defineProps, onMounted } from "vue";
-import { useRouter } from "vue-router";
-
-const router = useRouter();
 
 const store = useDataStore();
 const route = useRoute();
