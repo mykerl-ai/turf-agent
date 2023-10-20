@@ -147,7 +147,7 @@
 
       <div class="mt-9 text-sm">
         <h3 class="title-Font text-secondary text-left mb-4">
-          Houses under address
+          Units under this address
         </h3>
         <div class="flex flex-wrap gap-5">
           <div
