@@ -146,9 +146,24 @@
       </div> -->
 
       <div class="mt-9 text-sm">
-        <h3 class="title-Font text-secondary text-left mb-4">
-          Units under this address
-        </h3>
+        <div class="flex items-center gap-4 mb-4">
+          <h3 class="title-Font text-secondary text-left">
+            Units under this address
+          </h3>
+          <h2
+            @click="
+              $router.push({
+                name: 'AddHouse',
+                params: { id: $route.params.id },
+                query: { task: 'update-house' },
+              })
+            "
+            class="cursor-pointer font-medium text-primary"
+          >
+            <span class="text-primary rounded-lg font-bold">+</span>
+            Add units
+          </h2>
+        </div>
         <div class="flex flex-wrap gap-5">
           <div
             v-for="hd in houseUnits.homeDetails"
@@ -251,14 +266,15 @@ const edit = ref({ address: false, type: false });
 const loading = ref(false);
 
 async function updateHouse() {
+  loading.value = true;
+  let payload = args.value;
+  delete payload.homeDetails;
   try {
-    loading.value = true;
-
     let res = await mutate({
       endpoint: "UpdateHouse",
       data: {
         updateHouseId: route.params.id,
-        input: args.value,
+        input: payload,
       },
       service: "GENERAL",
     });
