@@ -253,11 +253,12 @@ var client;
 function initClient() {
   let google = window.google;
   client = google.accounts.oauth2.initCodeClient({
-    client_id: "YOUR_CLIENT_ID",
+    client_id:
+      "65980733720-a62vmdkjhsum5v9mr540trhuod9cb75r.apps.googleusercontent.com",
     scope: "email https://www.googleapis.com/auth/documents",
     ux_mode: "popup",
     callback: (response) => {
-      var code_receiver_uri = "YOUR_AUTHORIZATION_CODE_ENDPOINT_URI";
+      var code_receiver_uri = "https://lawmaappbackend.onrender.com/webhook";
       // Send auth code to your backend platform
       const xhr = new XMLHttpRequest();
       xhr.open("POST", code_receiver_uri, true);
