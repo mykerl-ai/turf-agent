@@ -258,6 +258,7 @@ function initClient() {
     scope: "email https://www.googleapis.com/auth/documents",
     ux_mode: "popup",
     callback: (response) => {
+      console.log(response, "errs");
       var code_receiver_uri = "https://lawmaappbackend.onrender.com/webhook";
       // Send auth code to your backend platform
       const xhr = new XMLHttpRequest();
