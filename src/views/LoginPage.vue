@@ -92,6 +92,13 @@
               >Forgot Password?</TurfButton
             >
 
+            <TurfButton
+              @click="signIn"
+              class="font-normal mt-2 text-xs"
+              fill="clear"
+              >Sign in with google</TurfButton
+            >
+
             <div class="mt-24">
               <div class="text-xs font-medium text-center text-white">
                 Don't have an account?
@@ -196,7 +203,7 @@ const toast = useToast();
 
 const { mutate } = store;
 import TurfButton from "@/components/ButtonNew.vue";
-import { ref } from "vue";
+import { onMounted, ref } from "vue";
 
 const step = ref(1);
 const args = ref({
@@ -229,6 +236,33 @@ async function login() {
     loading.value = false;
   }
 }
+
+function onSignIn(googleUser) {
+  const profile = googleUser.getBasicProfile();
+  console.log("ID: " + profile.getId());
+  console.log("Name: " + profile.getName());
+  console.log("Image URL: " + profile.getImageUrl());
+  console.log("Email: " + profile.getEmail());
+  // You can now send the ID token to your backend for verification
+  const idToken = googleUser.getAuthResponse().id_token;
+  console.log("ID Token: " + idToken);
+  // Perform further actions like sending the token to your backend server
+}
+function signIn() {
+  let gapi = window.gapi;
+  gapi.auth2.getAuthInstance().signIn().then(onSignIn);
+}
+
+onMounted(() => {
+  let gapi = window.gapi;
+  gapi.load("auth2", () => {
+    gapi.auth2.init({
+      client_id:
+        "65980733720-a62vmdkjhsum5v9mr540trhuod9cb75r.apps.googleusercontent.com",
+      scope: "email https://www.googleapis.com/auth/documents", // Define additional scopes if needed
+    });
+  });
+});
 </script>
 
 <style scoped>
