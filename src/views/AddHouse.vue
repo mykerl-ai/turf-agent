@@ -37,7 +37,9 @@
     />
 
     <form
-      @submit.prevent="uploadHouse"
+      @submit.prevent="
+        $route.query && $route.query.task ? updateHouse() : uploadHouse()
+      "
       class="bg-backgrd pb-32 flex flex-col mt-3 md:mt-0 gap-6 text-left pt-6 pl-6 pr-6 md:pt-6 md:pl-6 md:pr-6 overflow-x-hidden round md:w-11/12"
     >
       <div class="flex md:w-11/12 flex-col gap-2">
@@ -136,7 +138,9 @@
       </button>
 
       <TurfButton size="large" class="w-full md:w-11/12" color="primary"
-        ><span class="text-xs capitalize">Upload</span></TurfButton
+        ><span class="text-xs capitalize">{{
+          $route.params.id ? "Update" : "Upload"
+        }}</span></TurfButton
       >
     </form>
 
@@ -173,7 +177,7 @@ const props = defineProps({
 });
 const listOfHouses = computed(() => store.getAgentHouses);
 const homeWithDetails = computed(() => store.getSingleHomeDetail);
-
+const houseToBeUpdated = ref({});
 const args = ref({
   address: "",
   homeDetails: [
@@ -446,6 +450,22 @@ async function uploadHouse() {
       toast.success(
         route.params.id === "new" ? "Upload successful" : "Updated successfully"
       );
+      if (route.query.task) {
+        forms.value = [
+          {
+            bathRoom: "",
+            bedRoom: "",
+            description: "",
+            requirement: "",
+            rules: "",
+            toilet: "",
+            paymentType: "YEARLY",
+            price: "",
+            statusType: "AVAILABLE",
+            fileUrl: [],
+          },
+        ];
+      }
       router.go(-1);
     }
   } catch (e) {
@@ -470,22 +490,89 @@ async function queryHomeDetails() {
     loading.value = false;
   }
 }
+async function queryHouses() {
+  try {
+    loading.value = true;
+    await query({
+      endpoint: "FetchHouses",
+      payload: {},
+      service: "GENERAL",
+      storeKey: "agentHouses",
+    });
+  } catch (e) {
+    console.log(e);
+  } finally {
+    loading.value = false;
+  }
+}
+async function updateHouse() {
+  loading.value = true;
+  try {
+    args.value.homeDetails = [...forms.value];
+    if (uploadFile.value && uploadFile.value.length) {
+      const txt = await uploadFileToServer([...uploadFile.value]);
+      if (!txt) {
+        throw new Error("Image upload failed");
+      }
+      forms.value[forms.value.length - 1].fileUrl = txt;
+    }
+
+    let res = await mutate({
+      endpoint: "UpdateHouse",
+      data: {
+        updateHouseId: route.params.id,
+        input: args.value,
+      },
+      service: "GENERAL",
+    });
+    if (res && res._id) {
+      await queryHouses();
+      toast.success("House updated");
+    }
+  } catch (e) {
+    console.log(e);
+  } finally {
+    loading.value = false;
+  }
+}
 
 onMounted(async () => {
   if (route.params.id !== "new") {
-    await queryHomeDetails();
+    if (route.query.task) {
+      await queryHouses();
+      houseToBeUpdated.value = listOfHouses.value.find(
+        (h) => h._id === route.params.id
+      );
+      args.value.address = houseToBeUpdated.value.address;
+      args.value.houseType = houseToBeUpdated.value.houseType;
+      // args.value.homeDetails = houseToBeUpdated.value?.homeDetails.map((h) => {
+      //   return {
+      //     bathRoom: h.bathRoom,
+      //     bedRoom: h.bedRoom,
+      //     description: h.description,
+      //     fileUrl: h.fileUrl,
+      //     paymentType: h.paymentType,
+      //     price: h.price,
+      //     requirement: h.requirement,
+      //     rules: h.rules,
+      //     statusType: h.statusType,
+      //     toilet: h.toilet,
+      //   };
+      // });
+    } else {
+      await queryHomeDetails();
+      args.value.address = houseDetails.value.address;
 
-    args.value.address = houseDetails.value.address;
-
-    forms.value[0].bedRoom = homeWithDetails.value.bedRoom;
-    forms.value[0].bathRoom = homeWithDetails.value.bathRoom;
-    forms.value[0].toilet = homeWithDetails.value.toilet;
-    forms.value[0].price = homeWithDetails.value.price;
-    forms.value[0].description = homeWithDetails.value.description;
-    forms.value[0].paymentType = homeWithDetails.value.paymentType;
-    forms.value[0].statusType = homeWithDetails.value.statusType;
-    forms.value[0].requirement = homeWithDetails.value.requirement;
-    forms.value[0].rules = homeWithDetails.value.rules;
+      forms.value[0].bedRoom = homeWithDetails.value.bedRoom;
+      forms.value[0].bathRoom = homeWithDetails.value.bathRoom;
+      forms.value[0].toilet = homeWithDetails.value.toilet;
+      forms.value[0].price = homeWithDetails.value.price;
+      forms.value[0].description = homeWithDetails.value.description;
+      forms.value[0].paymentType = homeWithDetails.value.paymentType;
+      forms.value[0].statusType = homeWithDetails.value.statusType;
+      forms.value[0].requirement = homeWithDetails.value.requirement;
+      forms.value[0].rules = homeWithDetails.value.rules;
+    }
   }
 });
 </script>
