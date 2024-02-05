@@ -450,22 +450,7 @@ async function uploadHouse() {
       toast.success(
         route.params.id === "new" ? "Upload successful" : "Updated successfully"
       );
-      if (route.query.task) {
-        forms.value = [
-          {
-            bathRoom: "",
-            bedRoom: "",
-            description: "",
-            requirement: "",
-            rules: "",
-            toilet: "",
-            paymentType: "YEARLY",
-            price: "",
-            statusType: "AVAILABLE",
-            fileUrl: [],
-          },
-        ];
-      }
+
       router.go(-1);
     }
   } catch (e) {
@@ -528,6 +513,20 @@ async function updateHouse() {
     if (res && res._id) {
       await queryHouses();
       toast.success("House updated");
+      forms.value = [
+        {
+          bathRoom: "",
+          bedRoom: "",
+          description: "",
+          requirement: "",
+          rules: "",
+          toilet: "",
+          paymentType: "YEARLY",
+          price: "",
+          statusType: "AVAILABLE",
+          fileUrl: [],
+        },
+      ];
     }
   } catch (e) {
     console.log(e);
