@@ -93,7 +93,7 @@
             >
 
             <TurfButton
-              @click="signIn"
+              @click="getAuthCode"
               class="font-normal mt-2 text-xs"
               fill="clear"
               >Sign in with google</TurfButton
@@ -237,31 +237,61 @@ async function login() {
   }
 }
 
-function onSignIn(googleUser) {
-  const profile = googleUser.getBasicProfile();
-  console.log("ID: " + profile.getId());
-  console.log("Name: " + profile.getName());
-  console.log("Image URL: " + profile.getImageUrl());
-  console.log("Email: " + profile.getEmail());
-  // You can now send the ID token to your backend for verification
-  const idToken = googleUser.getAuthResponse().id_token;
-  console.log("ID Token: " + idToken);
-  // Perform further actions like sending the token to your backend server
+// function onSignIn(googleUser) {
+//   const profile = googleUser.getBasicProfile();
+//   console.log("ID: " + profile.getId());
+//   console.log("Name: " + profile.getName());
+//   console.log("Image URL: " + profile.getImageUrl());
+//   console.log("Email: " + profile.getEmail());
+//   // You can now send the ID token to your backend for verification
+//   const idToken = googleUser.getAuthResponse().id_token;
+//   console.log("ID Token: " + idToken);
+//   // Perform further actions like sending the token to your backend server
+// }
+
+var client;
+function initClient() {
+  let google = window.google;
+  client = google.accounts.oauth2.initCodeClient({
+    client_id: "YOUR_CLIENT_ID",
+    scope: "email https://www.googleapis.com/auth/documents",
+    ux_mode: "popup",
+    callback: (response) => {
+      var code_receiver_uri = "YOUR_AUTHORIZATION_CODE_ENDPOINT_URI";
+      // Send auth code to your backend platform
+      const xhr = new XMLHttpRequest();
+      xhr.open("POST", code_receiver_uri, true);
+      xhr.setRequestHeader("Content-Type", "application/x-www-form-urlencoded");
+      xhr.setRequestHeader("X-Requested-With", "XMLHttpRequest");
+      xhr.onload = function () {
+        console.log("Signed in as: " + xhr.responseText);
+      };
+      xhr.send("code=" + response.code);
+      // After receipt, the code is exchanged for an access token and
+      // refresh token, and the platform then updates this web app
+      // running in user's browser with the requested calendar info.
+    },
+  });
 }
-function signIn() {
-  let gapi = window.gapi;
-  gapi.auth2.getAuthInstance().signIn().then(onSignIn);
+function getAuthCode() {
+  // Request authorization code and obtain user consent
+  client.requestCode();
 }
+// function signIn() {
+//   let gapi = window.gapi;
+//   gapi.auth2.getAuthInstance().signIn().then(onSignIn);
+// }
 
 onMounted(() => {
-  let gapi = window.gapi;
-  gapi.load("auth2", () => {
-    gapi.auth2.init({
-      client_id:
-        "65980733720-a62vmdkjhsum5v9mr540trhuod9cb75r.apps.googleusercontent.com",
-      scope: "email https://www.googleapis.com/auth/documents", // Define additional scopes if needed
-    });
-  });
+  // let gapi = window.gapi;
+  // gapi.load("auth2", () => {
+  //   gapi.auth2.init({
+  //     client_id:
+  //       "65980733720-a62vmdkjhsum5v9mr540trhuod9cb75r.apps.googleusercontent.com",
+  //     scope: "email https://www.googleapis.com/auth/documents", // Define additional scopes if needed
+  //   });
+  // });
+  initClient();
 });
 </script>
 
