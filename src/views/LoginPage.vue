@@ -291,7 +291,7 @@ async function initClientToken() {
     client_id:
       "65980733720-a62vmdkjhsum5v9mr540trhuod9cb75r.apps.googleusercontent.com",
     scope:
-      "email https://www.googleapis.com/drive/v3/files https://www.googleapis.com/auth/documents https://www.googleapis.com/auth/drive https://www.googleapis.com/auth/drive.file",
+      "email https://www.googleapis.com/auth/documents https://www.googleapis.com/auth/drive https://www.googleapis.com/auth/drive.file",
     ux_mode: "popup",
     callback: (response) => {
       console.log(response, "errs");
