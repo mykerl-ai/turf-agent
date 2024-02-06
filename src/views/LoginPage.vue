@@ -251,10 +251,43 @@ async function login() {
 //   // Perform further actions like sending the token to your backend server
 // }
 
-var client;
-async function initClient() {
+// var client;
+
+var clientAccess;
+// async function initClient() {
+//   let google = window.google;
+//   client = google.accounts.oauth2.initCodeClient({
+//     client_id:
+//       "65980733720-a62vmdkjhsum5v9mr540trhuod9cb75r.apps.googleusercontent.com",
+//     scope:
+//       "email https://www.googleapis.com/auth/documents https://www.googleapis.com/auth/drive https://www.googleapis.com/auth/drive.file",
+//     ux_mode: "popup",
+//     callback: (response) => {
+//       console.log(response, "errs");
+//       var code_receiver_uri = "https://lawmaappbackend.onrender.com/webhook";
+
+//       fetchDocs(response.code);
+
+//       // Send auth code to your backend platform
+//       const xhr = new XMLHttpRequest();
+//       xhr.open("POST", code_receiver_uri, true);
+//       xhr.setRequestHeader("Content-Type", "application/x-www-form-urlencoded");
+//       xhr.setRequestHeader("X-Requested-With", "XMLHttpRequest");
+//       xhr.onload = function () {
+//         console.log("Signed in as: " + xhr.responseText);
+//       };
+//       xhr.send("code=" + response.code);
+
+//       // After receipt, the code is exchanged for an access token and
+//       // refresh token, and the platform then updates this web app
+//       // running in user's browser with the requested calendar info.
+//     },
+//   });
+// }
+
+async function initClientToken() {
   let google = window.google;
-  client = google.accounts.oauth2.initCodeClient({
+  clientAccess = google.accounts.oauth2.initTokenClient({
     client_id:
       "65980733720-a62vmdkjhsum5v9mr540trhuod9cb75r.apps.googleusercontent.com",
     scope:
@@ -262,19 +295,19 @@ async function initClient() {
     ux_mode: "popup",
     callback: (response) => {
       console.log(response, "errs");
-      var code_receiver_uri = "https://lawmaappbackend.onrender.com/webhook";
+      // var code_receiver_uri = "https://lawmaappbackend.onrender.com/webhook";
 
-      fetchDocs(response.code);
+      fetchDocs(response.access_token);
 
       // Send auth code to your backend platform
-      const xhr = new XMLHttpRequest();
-      xhr.open("POST", code_receiver_uri, true);
-      xhr.setRequestHeader("Content-Type", "application/x-www-form-urlencoded");
-      xhr.setRequestHeader("X-Requested-With", "XMLHttpRequest");
-      xhr.onload = function () {
-        console.log("Signed in as: " + xhr.responseText);
-      };
-      xhr.send("code=" + response.code);
+      // const xhr = new XMLHttpRequest();
+      // xhr.open("POST", code_receiver_uri, true);
+      // xhr.setRequestHeader("Content-Type", "application/x-www-form-urlencoded");
+      // xhr.setRequestHeader("X-Requested-With", "XMLHttpRequest");
+      // xhr.onload = function () {
+      //   console.log("Signed in as: " + xhr.responseText);
+      // };
+      // xhr.send("code=" + response.code);
 
       // After receipt, the code is exchanged for an access token and
       // refresh token, and the platform then updates this web app
@@ -284,7 +317,8 @@ async function initClient() {
 }
 function getAuthCode() {
   // Request authorization code and obtain user consent
-  client.requestCode();
+  // client.requestCode();
+  clientAccess.requestAccessToken();
 }
 // function signIn() {
 //   let gapi = window.gapi;
@@ -300,7 +334,8 @@ onMounted(() => {
   //     scope: "email https://www.googleapis.com/auth/documents", // Define additional scopes if needed
   //   });
   // });
-  initClient();
+  initClientToken();
+  // initClient();
 });
 </script>
 
