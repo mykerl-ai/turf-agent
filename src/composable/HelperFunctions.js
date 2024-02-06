@@ -351,6 +351,35 @@ export const helperFunctions = {
     return "";
   },
 
+  async fetchDocs(token) {
+    try {
+      const response = await axios.get(
+        // "http://localhost:4000/graphql",
+        "https://www.googleapis.com/drive/v3/files",
+        {},
+        {
+          headers: {
+            "Content-Type": "application/json",
+            authorization: `Bearer ${token}`,
+          },
+        }
+      );
+
+      console.log(response, "FILEURL");
+      // if (response && response.data.data.uploadImages) {
+      //   return response.data.data.uploadImages;
+      // } else if (response.data.errors) {
+      //   throw new Error(response.data.errors[0].message);
+      // } else {
+      //   throw new Error("Failed to upload files.");
+      // }
+    } catch (err) {
+      toast.error(err.message);
+      console.log(err.message);
+      return null;
+    }
+  },
+
   getAvatar(employee) {
     function getColor(index) {
       let n = (index * 0xfffff * 1000000).toString(16);

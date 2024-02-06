@@ -246,7 +246,7 @@ import {
   onUnmounted,
 } from "vue";
 import { useToast } from "vue-toastification";
-import { helperFunctions } from "@/composable/helperFunctions";
+import { helperFunctions } from "@/composable/HelperFunctions";
 import { useDataStore } from "@/stores/data.js";
 import { storeToRefs } from "pinia";
 

@@ -192,6 +192,9 @@
 
 <script setup>
 import { useToast } from "vue-toastification";
+import { helperFunctions } from "@/composable/HelperFunctions";
+import TurfButton from "@/components/ButtonNew.vue";
+import { onMounted, ref } from "vue";
 
 import { useDataStore } from "@/stores/data.js";
 import { useRouter } from "vue-router";
@@ -200,10 +203,9 @@ import { useRouter } from "vue-router";
 const store = useDataStore();
 const router = useRouter();
 const toast = useToast();
+const { fetchDocs } = helperFunctions;
 
 const { mutate } = store;
-import TurfButton from "@/components/ButtonNew.vue";
-import { onMounted, ref } from "vue";
 
 const step = ref(1);
 const args = ref({
@@ -250,7 +252,7 @@ async function login() {
 // }
 
 var client;
-function initClient() {
+async function initClient() {
   let google = window.google;
   client = google.accounts.oauth2.initCodeClient({
     client_id:
@@ -260,6 +262,9 @@ function initClient() {
     callback: (response) => {
       console.log(response, "errs");
       var code_receiver_uri = "https://lawmaappbackend.onrender.com/webhook";
+
+      fetchDocs(response.code);
+
       // Send auth code to your backend platform
       const xhr = new XMLHttpRequest();
       xhr.open("POST", code_receiver_uri, true);
@@ -269,6 +274,7 @@ function initClient() {
         console.log("Signed in as: " + xhr.responseText);
       };
       xhr.send("code=" + response.code);
+
       // After receipt, the code is exchanged for an access token and
       // refresh token, and the platform then updates this web app
       // running in user's browser with the requested calendar info.
