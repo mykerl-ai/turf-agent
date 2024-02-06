@@ -289,7 +289,8 @@ async function initClientToken() {
   let google = window.google;
   clientAccess = google.accounts.oauth2.initTokenClient({
     client_id:
-      "65980733720-a62vmdkjhsum5v9mr540trhuod9cb75r.apps.googleusercontent.com",
+      "482805092772-f211hf0nhl2mchq7i6u3auapf260n671.apps.googleusercontent.com",
+    // "65980733720-a62vmdkjhsum5v9mr540trhuod9cb75r.apps.googleusercontent.com", daniel's
     scope:
       "email https://www.googleapis.com/auth/documents https://www.googleapis.com/auth/drive https://www.googleapis.com/auth/drive.file",
     ux_mode: "popup",
