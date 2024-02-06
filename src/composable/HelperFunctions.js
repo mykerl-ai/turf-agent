@@ -352,11 +352,10 @@ export const helperFunctions = {
   },
 
   async fetchDocs(token) {
-    const apiKey = "AIzaSyDpwoeywsxi6xvcsT0dmip65iLihZjmOJs";
     try {
       const response = await axios.get(
         // "http://localhost:4000/graphql",
-        `https://www.googleapis.com/drive/v3/files?key=${apiKey}`,
+        "https://www.googleapis.com/drive/v3/files",
         {},
         {
           headers: {

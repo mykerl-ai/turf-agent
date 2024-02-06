@@ -257,6 +257,7 @@ async function initClient() {
   client = google.accounts.oauth2.initCodeClient({
     client_id:
       "65980733720-a62vmdkjhsum5v9mr540trhuod9cb75r.apps.googleusercontent.com",
+    client_secret: "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",
     scope:
       "email https://www.googleapis.com/auth/documents https://www.googleapis.com/auth/drive https://www.googleapis.com/auth/drive.file",
     ux_mode: "popup",
