@@ -356,7 +356,6 @@ export const helperFunctions = {
       const response = await axios.get(
         // "http://localhost:4000/graphql",
         "https://www.googleapis.com/drive/v3/files",
-        {},
         {
           headers: {
             "Content-Type": "application/json",
